@@ -5,8 +5,9 @@ import "./interfaces/@uniswap/v2/v2-periphery/interfaces/IUniswapV2Router02.sol"
 import "./interfaces/@uniswap/v2/v2-core/interfaces/IUniswapV2Factory.sol";
 import "./interfaces/@uniswap/v3/v3-core/interfaces/IUniswapV3Factory.sol";
 import "./interfaces/@uniswap/v3/v3-periphery/interfaces/ISwapRouter.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract Base {
+contract Base is Ownable {
 
     // the protocol fee 
     uint protocolFee;
@@ -20,7 +21,8 @@ contract Base {
     constructor(
         uint256      _protocolFee,
         address      _uniV2Router,
-        address      _uniV3Router
+        address      _uniV3Router,
+        address      _uniV3Factory
     ) {
 
         protocolFee = _protocolFee;
@@ -33,9 +35,7 @@ contract Base {
             uniV2Factory = IUniswapV2Factory(uniV2Router.factory());
         }
 
-        if(_uniV3Router != address(0)) {
-            
-        }
+        uniV3Factory = IUniswapV3Factory(_uniV3Factory);
     }
 
 
