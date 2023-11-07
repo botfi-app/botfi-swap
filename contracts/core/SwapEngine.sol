@@ -5,69 +5,44 @@ import "../ContractBase.sol";
 
 contract SwapEngine is ContractBase {
 
-     bool initialized; 
+    bool initialized; 
 
-    // the protocol fee 
-    uint protocolFee;
-
-    IUniswapV2Router02 uniV2Router;
-    IUniswapV2Factory  uniV2Factory; 
-    IERC20Metadata     uniV2WETH;
-
-    IUniswapV3Factory uniV3Factory; 
-    ISwapRouter uniV3Router;
-
-    DexParams[] public dexes;
+    // dexId Uint => Dex Params 
+    mapping (bytes32 => DexParams) public dexesParams;
+    bytes32[] public dexes;
     
-    function __initSwapEngine (
-        uint256      _protocolFee,
-        address       _uniV2Router,
-        address      _uniV3Router,
-        address      _uniV3Factory
-    ) internal {
 
-        require(!initialized, "BotFi: ALREADY_INITIALIZED");
-
-        protocolFee = _protocolFee;
-        
-        //setup uniswap v2 contract
-        __setUpUniV2(_uniV2Router);
-
-        // setup uniswap v3 contract
-        __setUpUniV3(_uniV3Router, _uniV3Factory);
-
-        initialized = true; 
-    }
-
-    /**
-     * @dev set up uniswap v2 contract
-     * @param _uniV2Router uniswap v2 router address
-     */
-    function __setUpUniV2( address _uniV2Router)
-        private 
+    function addDex(
+        bytes32 dex,
+        IUniswapV2Router02 uniV2Router, 
+        ISwapRouter        uniV3Router,
+        address            uniV3Factory,
+        bool               enabled
+    ) 
+        public 
+        onlyOwner 
     {
 
-        uniV2Router = IUniswapV2Router02(_uniV2Router);
+        bool isNew = (dexesParams[dex].createdAt == 0);
 
-        if(_uniV2Router != address(0)){
-            uniV2Factory = IUniswapV2Factory(uniV2Router.factory());
-        }
+        address v2FactoryAddr = (address(uniV2Router) == address(0))
+                                ? address(0) 
+                                : uniV2Router.factory();
 
-        uniV2WETH = IERC20Metadata(uniV2Router.WETH());
+        uint createdAt = (isNew) ? block.timestamp : dexesParams[dex].createdAt;
+
+        dexesParams[dex] = DexParams(
+            dex,
+            uniV2Router,
+            IUniswapV2Factory(v2FactoryAddr),
+            ISwapRouter(uniV3Router),
+            IUniswapV3Factory(uniV3Factory),
+            createdAt,
+            enabled
+        );
+
+        if(isNew) dexes.push(dex);
+    
     }
-
-    /**
-     * 
-     * @param _uniV3Router uniswap v3 router address
-     */
-    function __setUpUniV3( 
-        address _uniV3Router,
-        address _uniV3Factory
-    )
-        private 
-    {
-
-        if()
-    }
-
+    
 }
