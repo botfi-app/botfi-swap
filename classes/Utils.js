@@ -12,6 +12,8 @@ const ethers = require("ethers")
 
 module.exports = class Utils {
 
+    static zeroAddress = ethers.constants.AddressZero;
+    
     /**
      * base64Encode
      */
@@ -157,5 +159,6 @@ module.exports = class Utils {
      static capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
-   
+    
+    
  }
