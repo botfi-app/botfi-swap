@@ -7,39 +7,11 @@ import "./interfaces/@uniswap/v3/v3-core/interfaces/IUniswapV3Factory.sol";
 import "./interfaces/@uniswap/v3/v3-periphery/interfaces/ISwapRouter.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Context.sol";
+import "@openzeppelin/contracts/interfaces/IERC20Metadata.sol";
+import "./base/Globals.sol";
 
 contract ContractBase is Context, Ownable {
 
-    // the protocol fee 
-    uint protocolFee;
+    constructor() Ownable(_msgSender()) {}
 
-    IUniswapV2Router02 uniV2Router;
-    IUniswapV2Factory  uniV2Factory; 
-
-    IUniswapV3Factory uniV3Factory; 
-    ISwapRouter uniV3Router;
-
-    constructor(
-        uint256      _protocolFee,
-        address      _uniV2Router,
-        address      _uniV3Router,
-        address      _uniV3Factory
-    ) 
-        Ownable(_msgSender()) 
-    {
-
-        protocolFee = _protocolFee;
-
-        uniV2Router = IUniswapV2Router02(_uniV2Router);
-        uniV3Router = ISwapRouter(_uniV3Router);
-
-
-        if(_uniV2Router != address(0)){
-            uniV2Factory = IUniswapV2Factory(uniV2Router.factory());
-        }
-
-        uniV3Factory = IUniswapV3Factory(_uniV3Factory);
-    }
-
-    
 }
