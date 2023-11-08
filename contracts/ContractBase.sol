@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Context.sol";
-import "@openzeppelin/contracts/interfaces/IERC20Metadata.sol";
+import "@openzeppelin/contracts/interfaces/IERC20.sol";
 import "./interfaces/@uniswap/v2/v2-periphery/interfaces/IWETH.sol";
 import "@openzeppelin/contracts/utils/Multicall.sol";
 import "./base/Globals.sol";
