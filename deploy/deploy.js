@@ -52,7 +52,7 @@ module.exports = async ({getUnnamedAccounts, deployments, ethers, network}) => {
         let factoryIface = new ethers.utils.Interface(deployedFactory.abi);
 
 
-        let inputs = []
+        let dexesInputs = []
 
         for(let dexName of Object.keys(dexesInfo)){
             
@@ -71,10 +71,18 @@ module.exports = async ({getUnnamedAccounts, deployments, ethers, network}) => {
                             ]
                         );
 
-            inputs.push(data)
+            dexesInputs.push(data)
         }
 
-        console.log("inputs===>", inputs)
+        Utils.infoMsg("adding dexes with multicall")
+        
+        let factoryMcall = await factoryContract.multicall(dexesInputs)
+
+        //lets wait for tx to complete 
+        await factoryMcall.wait();
+
+        Utils.successMsg("addDex multicall success: "+ factoryMcall.hash)
+
     }  catch(e) {
         console.log(e,e.stack)
     }
