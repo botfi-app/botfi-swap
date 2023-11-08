@@ -116,7 +116,17 @@ contract SwapEngine is TransferHelper, ContractBase {
 
         address weth = _dexInfo.v2Router.WETH();
         address recipient = address(this);
-        uint deadline = block.timestamp + 60; // 1min
+        uint deadline = block.timestamp + 30; // 30 secs
+
+        // if tokenA supports tax after transfer, we will have to split
+        // the slippage into two, one for transferring the token to this contract
+        // the other half for univ2 based dex transfer
+        uint slippage2 = slippageBps;
+
+        // same as the slippage, for tokens with gas fee, the amount will reduce
+        unit256 amount2 = amount;
+        
+        address[] memory path = new address[](2);
 
         if(tokenA == nativeToken) {
             
@@ -128,8 +138,15 @@ contract SwapEngine is TransferHelper, ContractBase {
         } else {
 
             // lets transfer the tokens from the user
-            require(IERC20(tokenA).transferFrom(_msgSender(), address(this), amount), "BotFi: TOKENA_TRANSFER_FAILED");
+            transferAsset(tokenA, _msgSender(), address(this), amount);
 
+            if(supportsFeeOnTransfer){
+                //split into half 
+                uint slippage2Amt =  calPercentage(amount, (slippage2 / 2));
+
+                // substract the taken tax from the amount
+                amount2 -= slippage2Amt;
+            }
         }
         
         // if token B is native, then we use weth
@@ -137,7 +154,7 @@ contract SwapEngine is TransferHelper, ContractBase {
             tokenB = weth;
         }
 
-        address[] memory path = new address[](2);
+        
         path[0] = tokenA;
         path[1] = tokenB;
 
@@ -145,11 +162,13 @@ contract SwapEngine is TransferHelper, ContractBase {
         
         uint256 amountIn = amount - feeAmt;
 
-        uint256 amountOutMin = __getV2AmountOutMin(
+        uint256 amountOutMin =  __getV2AmountOutMin(
                                     amountIn, 
                                     path,
                                     _dexInfo.v2Router, 
-                                    slippageBps
+                                    (supportsFeeOnTransfer ? 
+                                        (slippageBps / 2) : slippageBps
+                                    )
                                 );
 
         if(tokenA == weth){
@@ -171,7 +190,41 @@ contract SwapEngine is TransferHelper, ContractBase {
                             deadline
                         );
                 }
+        } 
+        else if(tokenB == weth){
+
+            if(supportsFeeOnTransfer){ 
+
+                _dexInfo.v2Router
+                        .swapExactTokensForETHSupportingFeeOnTransferTokens(
+                            amountIn, 
+                            amountOutMin,
+                            path, 
+                            recipient,
+                            deadline
+                        );
+
+            } else {
+
+                 _dexInfo.v2Router
+                        .swapExactTokensForETH(
+                            amountIn, 
+                            amountOutMin, 
+                            path, 
+                            recipient,
+                            deadline
+                        );
+            }
         }
+
+
+        // lets transfer the fee to feeAddress
+        transferAsset(
+            (tokenA == weth ? nativeToken : tokenA),
+            address(this),
+            feeAddress,
+            feeAmt
+        );
 
         emit SwapV2(amount, tokenA, tokenB, recipient, protocolFee, slippageBps);
     } //end swap v2

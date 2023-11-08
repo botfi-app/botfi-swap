@@ -13,7 +13,7 @@ contract TransferHelper is Globals {
      * @param to the recipient's address
      * @param value the value to send
     */
-    function transfer(
+    function transferAsset(
         address token,
         address from,
         address to,
