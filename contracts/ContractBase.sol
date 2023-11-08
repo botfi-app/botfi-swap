@@ -10,18 +10,31 @@ import "./base/Globals.sol";
 
 contract ContractBase is Globals, Context, Ownable, Multicall {
 
+
+    event SetProtocolFee(uint256);
+
     constructor() Ownable(_msgSender()) {}
 
-    function __setProtocolFee (uint256 _fee)
+    /**
+     * @dev protocol fee in basis point
+     * @param _feeBps the fee in percentage basis point
+     */
+    function __setProtocolFee (uint256 _feeBps)
         internal
     {
-        protocolFee = _fee;
+        protocolFee = _feeBps;
+
+        emit SetProtocolFee(_feeBps);
     }
 
-    function setProtocolFee(uint _fee)
+    /**
+     * @dev protocol fee in basis point
+     * @param _feeBps the fee in percentage basis point
+     */
+    function setProtocolFee(uint _feeBps)
         public 
         onlyOwner 
     {
-        __setProtocolFee(_fee);
+        __setProtocolFee(_feeBps);
     }
 }

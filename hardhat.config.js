@@ -22,10 +22,10 @@ module.exports = {
     hardhat: {
       accounts: accounts.map( privateKey => ({ 
           privateKey, 
-          "balance": "91229544000000000000"
+          "balance": "991229544000000000000"
       })),
       forking: {
-        url: `https://ethereum-goerli.publicnode.com`,
+        url: `https://eth-mainnet.nodereal.io/v1/${noderealApiKey}`,
       },
       chainId: 1337
     },
