@@ -12,6 +12,7 @@ contract ContractBase is Globals, Context, Ownable, Multicall {
 
 
     event SetProtocolFee(uint256);
+    event SetFeeAddress(address addr);
 
     constructor() Ownable(_msgSender()) {}
 
@@ -36,5 +37,24 @@ contract ContractBase is Globals, Context, Ownable, Multicall {
         onlyOwner 
     {
         __setProtocolFee(_feeBps);
+    }
+
+    
+    function __setFeeAddress(address addr)
+        internal 
+    {
+        feeAddress = addr;
+        emit SetFeeAddress(addr);
+    }
+
+    /**
+     * @dev set the address for taking the protocol fees
+     * @param addr the fee in percentage basis point
+     */
+    function setFeeAddress(address addr)
+        public 
+        onlyOwner 
+    {
+        __setFeeAddress(addr);
     }
 }

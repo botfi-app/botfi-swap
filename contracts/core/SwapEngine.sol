@@ -2,8 +2,18 @@
 pragma solidity ^0.8.0;
 
 import "../ContractBase.sol";
+import "../base/TransferHelper.sol";
 
-contract SwapEngine is ContractBase {
+contract SwapEngine is TransferHelper, ContractBase {
+
+    event SwapV2(
+        uint256 amount, 
+        address tokenA, 
+        address tokenB,
+        address recipient, 
+        uint    fee, 
+        uint    slippage
+    );
 
     bool initialized; 
 
@@ -162,7 +172,8 @@ contract SwapEngine is ContractBase {
                         );
                 }
         }
-     
+
+        emit SwapV2(amount, tokenA, tokenB, recipient, protocolFee, slippageBps);
     } //end swap v2
 
 

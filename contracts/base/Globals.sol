@@ -12,6 +12,9 @@ contract Globals {
     // the protocol fee 
     uint protocolFee;
 
+    // the fee address, for taking fees 
+    address feeAddress;
+
     // native token 
     address nativeToken = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
 

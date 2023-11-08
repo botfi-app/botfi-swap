@@ -7,9 +7,11 @@ import "./core/SwapEngine.sol";
 contract Factory is ContractBase, SwapEngine {
 
     constructor(
-        uint    protocolFee
+        uint    protocolFee,
+        address feeAddress
     ) {     
         __setProtocolFee(protocolFee);
+        __setFeeAddress(feeAddress);
     }
     
 }
