@@ -11,6 +11,9 @@ contract Globals {
     // the protocol fee 
     uint protocolFee;
 
+    // native token 
+    address nativeToken = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+
     struct DexParams {
         bytes32             dex;
         IUniswapV2Router02  v2Router;

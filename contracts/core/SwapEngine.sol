@@ -45,4 +45,43 @@ contract SwapEngine is ContractBase {
     
     }
     
+
+    /**
+     * @dev swap uniswap v2
+     * @param amount the input amount
+     * @param tokenIn the input token address 
+     * @param tokenOut the output token address
+     */
+    function swapV2(
+        bytes32 dex,
+        uint256 amount, 
+        address tokenA, 
+        address tokenB,
+        bool    tokenSupportingFee
+    ) 
+        public 
+        payable
+    {
+
+        DexParams memory _dex = dexesParams[dex];
+
+        require(_dexInfo.createdAt > 0, "BotFi: UNSUPPORTED_DEX");
+        require(address(_dex.v2Router) != address(0), "BotFi: V2_SWAP_UNSUPPORTED");
+
+        if(tokenA == nativeToken) {
+            
+            //validate native token input
+            require(msg.value == amount, "BotFi: INSUFFICIENT_BALANCE");
+
+            tokenA = _dex.v2Router.WETH();
+        }
+        
+        if(tokenB == nativeToken){
+            tokenB = _dex.v2Router.WETH();
+        }
+
+        address[] memory pair = [tokenA, tokenB];
+    }
+
+
 }
