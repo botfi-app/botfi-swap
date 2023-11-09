@@ -13,8 +13,8 @@ contract Defs {
     address constant NATIVE_TOKEN = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
 
     // adapters 
-    bytes32 constant ROUTE_GROUP_UNI_V2 = bytes32("uni_v2");
-    bytes32 constant ROUTE_GROUP_UNI_V3 = bytes32("uni_v3");
+    bytes32 constant ROUTE_GROUP_UNI_V2 = bytes32("univ2");
+    bytes32 constant ROUTE_GROUP_UNI_V3 = bytes32("univ3");
 
     // id  =>  RouteParams 
     mapping (bytes32 => RouteParams) public routes;

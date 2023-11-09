@@ -41,9 +41,7 @@ module.exports = async ({getUnnamedAccounts, deployments, ethers, network}) => {
 
         deployedContractsAddresses["factory"] = deployedFactory.address;
 
-        // lets set up the dexes 
-        let routers = require(`../data/chains/${networkName}/routers.js`)
-        
+   
         //console.log("dexesInfo===>", dexesInfo)
 
         let factoryContract = new ethers.Contract(
@@ -53,40 +51,43 @@ module.exports = async ({getUnnamedAccounts, deployments, ethers, network}) => {
                             )
 
         let factoryIface = new ethers.utils.Interface(deployedFactory.abi);
+        
+        // lets set up the dexes 
+        let routes = require(`../data/chains/${networkName}/routes.js`)
+        
 
+        let routesInputs = []
 
-        let routersInputs = []
-
-        for(let routerId of Object.keys(routers)){
+        for(let routeId of Object.keys(routes)){
             
-            let routerInfo = routers[routerId]
+            let routeInfo = routes[routeId]
 
-            let routerIdByte32 = ethersUtils.formatBytes32String(
-                                routerId.trim().toLowerCase()
+            let routeIdByte32 = ethersUtils.formatBytes32String(
+                                routeId.trim().toLowerCase()
                             );
 
-            let adapterByte32 = ethersUtils.formatBytes32String(
-                                    routerInfo.adapter.trim().toLowerCase()
+            let groupByte32 = ethersUtils.formatBytes32String(
+                                    routeInfo.group.trim().toLowerCase()
                                 );
 
             let data =  factoryIface.encodeFunctionData(
-                            "addRouter", 
+                            "addRoute", 
                             [
-                                routerIdByte32, 
-                                adapterByte32,
-                                routerInfo.router,
-                                routerInfo.factory, 
-                                routerInfo.weth,
+                                routeIdByte32, 
+                                groupByte32,
+                                routeInfo.router,
+                                routeInfo.factory, 
+                                routeInfo.weth,
                                 true 
                             ]
                         );
 
-            routersInputs.push(data)
+            routesInputs.push(data)
         }
 
-        Utils.infoMsg("adding dexes with multicall")
+        Utils.infoMsg("adding routes with multicall")
         
-        let factoryMcall = await factoryContract.multicall(routersInputs)
+        let factoryMcall = await factoryContract.multicall(routesInputs)
 
         //lets wait for tx to complete 
         await factoryMcall.wait();

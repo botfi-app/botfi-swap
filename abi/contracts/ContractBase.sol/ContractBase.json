@@ -163,7 +163,7 @@
         "type": "bytes32"
       }
     ],
-    "name": "routers",
+    "name": "routes",
     "outputs": [
       {
         "internalType": "bytes32",
@@ -172,12 +172,12 @@
       },
       {
         "internalType": "bytes32",
-        "name": "adapter",
+        "name": "group",
         "type": "bytes32"
       },
       {
         "internalType": "address payable",
-        "name": "route",
+        "name": "router",
         "type": "address"
       },
       {
@@ -212,7 +212,7 @@
         "type": "uint256"
       }
     ],
-    "name": "routersIds",
+    "name": "routesIds",
     "outputs": [
       {
         "internalType": "bytes32",

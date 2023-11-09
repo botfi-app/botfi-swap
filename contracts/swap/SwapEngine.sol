@@ -130,9 +130,13 @@ contract SwapEngine is TransferHelper, ContractBase {
     function getAllRoutes()
         external
         view 
-        returns (RouteParams[] memory)
+        returns (RouteParams[] memory rp)
     {
+       rp = new RouteParams[](routesIds.length); 
 
+        for(uint i=0; i < routesIds.length; i++){
+            rp[i] = routes[routesIds[i]];
+        }
     }
 
     /**
