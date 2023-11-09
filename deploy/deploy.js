@@ -92,38 +92,12 @@ module.exports = async ({getUnnamedAccounts, deployments, ethers, network}) => {
         await factoryMcall.wait();
 
         Utils.successMsg("addDex multicall success: "+ factoryMcall.hash)
+        
+        // export contract addresses
+        await exportContractAddresses({ chainId, deployedContractsAddresses })
 
-        // export contract info to the provide paths
-        Utils.infoMsg("Exporting contract info")
-
-        let contractInfoExportPaths = secrets.contractInfoExportPaths || []
-
-        for(let configDirPath of contractInfoExportPaths){
-
-            //lets create the path 
-            await fsp.mkdir(configDirPath, {recursive: true})
-
-            let configFilePath = `${configDirPath}/${chainId}.json`;
-
-            // lets now fetch the data 
-            let contractInfoData = {}
-
-            try {
-                contractInfoData = require(configFilePath)
-            } catch(e){}
-
-            contractInfoData = _lodash.merge({},contractInfoData, deployedContractsAddresses)
-
-            Utils.infoMsg(`New Config For ${networkName} - ${JSON.stringify(contractInfoData, null, 2)}`)
-
-            Utils.successMsg(`Saving ${chainId} contract info to ${configFilePath}`)
-            console.log()
-
-            //lets save it back
-            await fsp.writeFile(configFilePath, JSON.stringify(contractInfoData, null, 2));
-       }
-
-
+        // export contract abis 
+        await exportContractABIs({ chainId, deployedContracts })
     }  catch(e) {
         console.log(e,e.stack)
     }
@@ -131,9 +105,65 @@ module.exports = async ({getUnnamedAccounts, deployments, ethers, network}) => {
 }
 
 
-/**
- * setUpDexes
- */
-const setUpDexes = async () => {
+const exportContractAddresses = async ({ chainId, deployedContractsAddresses}) => {
+
+    // export contract info to the provide paths
+    Utils.infoMsg("Exporting contract addresses")
+
+    let contractAddrsExportPaths = secrets.contractAddressesExportPaths || []
+
+    for(let configDirPath of contractAddrsExportPaths){
+
+        //lets create the path 
+        await fsp.mkdir(configDirPath, {recursive: true})
+
+        let configFilePath = `${configDirPath}/${chainId}.json`;
+
+        // lets now fetch the data 
+        let contractInfoData = {}
+
+        try {
+            contractInfoData = require(configFilePath)
+        } catch(e){}
+
+        contractInfoData = _lodash.merge({},contractInfoData, deployedContractsAddresses)
+
+        Utils.infoMsg(`New Config For ${networkName} - ${JSON.stringify(contractInfoData, null, 2)}`)
+
+        Utils.successMsg(`Saving ${chainId} contract info to ${configFilePath}`)
+        console.log()
+
+        //lets save it back
+        await fsp.writeFile(configFilePath, JSON.stringify(contractInfoData, null, 2));
+    }
+}
+
+//export contract abis 
+const exportContractABIs = async ({ 
+    chainId, 
+    deployedContracts
+}) => {
+
+    let {
+        factory
+    } = deployedContracts
+
+    Utils.successMsg(`Exporting abi files`);
+
+    await hre.run("export-abi");
+
+     // let export the abi
+     let abiExportsPathsArray = secrets.abiExportPaths || []
+
+     for(let exportPath of abiExportsPathsArray) {
+
+         let exportDir = `${exportPath}/`
+         
+         await fsp.mkdir(exportDir, {recursive: true})
+         
+         Utils.successMsg(`Exporting factory.json to ${exportPath}/factory.json`);
+         await fsp.writeFile(`${exportDir}/factory.json`, JSON.stringify(factory.abi, null, 2));
+     
+     }
 
 }
