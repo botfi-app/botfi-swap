@@ -17,10 +17,15 @@ contract SwapEngine is TransferHelper, ContractBase {
     using Address for address;
     using Address for address payable;
 
-    bool initialized;
+    bool swapPaused;
 
     receive() external payable{}
     fallback() external payable{}
+
+    modifier swapNotPaused() {
+        require(!swapPaused, "BotFi#swapNotPaused: SWAP_PAUSED");
+        _;
+    }
 
     function addRouter(
         bytes32             id,
@@ -39,6 +44,11 @@ contract SwapEngine is TransferHelper, ContractBase {
         bool isNew = (routers[id].createdAt == 0);
         uint createdAt = (isNew) ? block.timestamp : routers[id].createdAt;
 
+        if(adapter == bytes32("uni_v2")){
+            factory = IUniswapV2Router02(route).factory();
+            weth    = IUniswapV2Router02(route).WETH();
+        }
+
         routers[id] = RouterParams(
             id,
             adapter, 
@@ -52,6 +62,16 @@ contract SwapEngine is TransferHelper, ContractBase {
         if(isNew) routersIds.push(id);
     }
 
+    /**
+     * @dev pause the swap operation for the contract
+     * @param opt true or false 
+     */
+    function pauseSwap(bool opt) 
+        external
+        onlyOwner 
+    {
+        swapPaused = opt;
+    }
 
     /**
      * @dev perform a swap
@@ -69,6 +89,7 @@ contract SwapEngine is TransferHelper, ContractBase {
         external 
         payable
         nonReentrant()
+        swapNotPaused()
     {   
 
         require(routers[routerId].createdAt > 0, "BotFi#Swap: UNSUPPORTED_DEX");

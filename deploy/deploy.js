@@ -29,7 +29,7 @@ module.exports = async ({getUnnamedAccounts, deployments, ethers, network}) => {
 
         let deployedFactory = await deploy('Factory', {
             from: owner,
-            args: [dappArgs.protocolFeeBasisPoint],
+            args: [dappArgs.protocolFeeBasisPoint, dappArgs.feeWallet],
             log: true
         });
         
@@ -39,7 +39,7 @@ module.exports = async ({getUnnamedAccounts, deployments, ethers, network}) => {
         deployedContractsAddresses["factory"] = deployedFactory.address;
 
         // lets set up the dexes 
-        let dexesInfo = require(`../data/chains/${networkName}/dexes.js`)
+        let routers = require(`../data/chains/${networkName}/routers.js`)
         
         //console.log("dexesInfo===>", dexesInfo)
 
@@ -54,19 +54,26 @@ module.exports = async ({getUnnamedAccounts, deployments, ethers, network}) => {
 
         let dexesInputs = []
 
-        for(let dexName of Object.keys(dexesInfo)){
+        for(let routerId of Object.keys(routers)){
             
-            let dexInfo = dexesInfo[dexName]
+            let routerInfo = routers[routerId]
 
-            let nameBytes32 = ethersUtils.formatBytes32String(dexName.toLowerCase());
+            let routerIdByte32 = ethersUtils.formatBytes32String(
+                                routerId.trim().toLowerCase()
+                            );
+
+            let adapterByte32 = ethersUtils.formatBytes32String(
+                                    routerInfo.adapter.trim().toLowerCase()
+                                );
 
             let data =  factoryIface.encodeFunctionData(
-                            "addDex", 
+                            "addRouter", 
                             [
-                                nameBytes32, 
-                                dexInfo.v2.router,
-                                dexInfo.v3.router, 
-                                dexInfo.v3.factory,
+                                routerIdByte32, 
+                                adapterByte32,
+                                routerInfo.router,
+                                routerInfo.factory, 
+                                routerInfo.weth,
                                 true 
                             ]
                         );
