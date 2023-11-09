@@ -6,13 +6,22 @@ import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/interfaces/IERC20.sol";
 import "./interfaces/@uniswap/v2/v2-periphery/interfaces/IWETH.sol";
 import "@openzeppelin/contracts/utils/Multicall.sol";
+import "@openzeppelin/contracts/utils/Address.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+
 import "./base/Globals.sol";
 
-contract ContractBase is Globals, Context, Ownable, Multicall {
+contract ContractBase is 
+    Globals, 
+    Context, 
+    Ownable, 
+    Multicall, 
+    ReentrancyGuard 
+{
 
 
     event SetProtocolFee(uint256);
-    event SetFeeAddress(address addr);
+    event SetFeeWallet(address addr);
 
     constructor() Ownable(_msgSender()) {}
 
@@ -23,7 +32,7 @@ contract ContractBase is Globals, Context, Ownable, Multicall {
     function __setProtocolFee (uint256 _feeBps)
         internal
     {
-        protocolFee = _feeBps;
+        PROTOCOL_FEE = _feeBps;
 
         emit SetProtocolFee(_feeBps);
     }
@@ -40,21 +49,21 @@ contract ContractBase is Globals, Context, Ownable, Multicall {
     }
 
     
-    function __setFeeAddress(address addr)
+    function __setFeeWallet(address addr)
         internal 
     {
-        feeAddress = addr;
-        emit SetFeeAddress(addr);
+        FEE_WALLET = addr;
+        emit SetFeeWallet(addr);
     }
 
     /**
      * @dev set the address for taking the protocol fees
      * @param addr the fee in percentage basis point
      */
-    function setFeeAddress(address addr)
+    function setFeeWallet(address addr)
         public 
         onlyOwner 
     {
-        __setFeeAddress(addr);
+        __setFeeWallet(addr);
     }
 }

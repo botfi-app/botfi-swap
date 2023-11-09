@@ -6,23 +6,28 @@ import "../interfaces/@uniswap/v2/v2-core/interfaces/IUniswapV2Factory.sol";
 import "../interfaces/@uniswap/v3/v3-core/interfaces/IUniswapV3Factory.sol";
 import "../interfaces/@uniswap/v3/v3-periphery/interfaces/ISwapRouter.sol";
 import "../interfaces/@uniswap/v2/v2-core/interfaces/IUniswapV2Pair.sol";
-import "@openzeppelin/contracts/utils/Address.sol";
+
 
 contract Globals {
 
     // the protocol fee 
-    uint protocolFee;
+    uint PROTOCOL_FEE;
 
     // the fee address, for taking fees 
-    address feeAddress;
+    address FEE_WALLET;
 
     // native token 
-    address nativeToken = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+    address NATIVE_TOKEN = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+
+
+    // id  =>  RouteParams 
+    mapping (bytes32 => RouterParams) public routers;
+    bytes32[] public routersIds;
 
     struct RouterParams {
         bytes32             id;
         bytes32             adapter; //adapter name uni_v2, uni_v3 and 1inch, balancer
-        address   payable   router;
+        address   payable   route;
         address             factory;
         address             weth;
         uint256             createdAt;

@@ -8,10 +8,10 @@ contract Factory is ContractBase, SwapEngine {
 
     constructor(
         uint    protocolFee,
-        address feeAddress
+        address feeWallet
     ) {     
         __setProtocolFee(protocolFee);
-        __setFeeAddress(feeAddress);
+        __setFeeWallet(feeWallet);
     }
     
 }

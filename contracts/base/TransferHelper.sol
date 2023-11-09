@@ -20,7 +20,7 @@ contract TransferHelper is Globals {
         uint256 value
     ) internal {
         
-        if(token == nativeToken){
+        if(token == NATIVE_TOKEN){
             safeTransferETH(to, value);
         } else {
             safeTransferFrom(token, from, to, value);
