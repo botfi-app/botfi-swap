@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity ^0.8.0;
 
 import "../ContractBase.sol";
@@ -43,7 +43,7 @@ contract SwapEngine is TransferHelper, ContractBase {
 
         IUniswapV2Router02 irouter = IUniswapV2Router02(uniV2Router);
 
-        string memory revertErrMsg = "BotFi#SwapEngine#getUniV2RouterInfo: Failed to fetch uni_v2 factory and weth from router, kindly check if the router is valid";
+        string memory revertErrMsg = "BotFi#SwapEngine#getUniV2RouterInfo: Invalid Uniswap V2 Based Dex Router Address";
 
         try  irouter.factory() returns(address _f) {
             factory = _f;
@@ -67,17 +67,26 @@ contract SwapEngine is TransferHelper, ContractBase {
         address             weth,
         bool                enabled
     ) 
-        public 
+        external 
         onlyOwner 
     {
 
-        require(route != address(0), "BotFi: ZERO_ROUTER_ADDRESS");
+        require(route != address(0), "BotFi#SwapEngine#addRouter: ZERO_ROUTER_ADDRESS");
+
+        require(Utils.isContract(route), "BotFi#SwapEngine#addRouter: ROUTE_NOT_A_CONTRACT");
+    
 
         bool isNew = (routers[id].createdAt == 0);
         uint createdAt = (isNew) ? block.timestamp : routers[id].createdAt;
 
-        if(adapter == bytes32("uni_v2")){
+        if(adapter == ADAPTER_UNI_V2){
             (factory, weth) = getUniV2RouterInfo(route);
+        } else {
+
+            require(Utils.isContract(factory), "BotFi#SwapEngine#addRouter: FACTORY_NOT_A_CONTRACT");
+
+            require(Utils.isContract(weth), "BotFi#SwapEngine#addRouter: WETH_NOT_A_CONTRACT");
+
         }
 
         routers[id] = RouterParams(
@@ -105,6 +114,15 @@ contract SwapEngine is TransferHelper, ContractBase {
         swapPaused = opt;
     }
 
+
+    modifier validateRouter(bytes32 routerId) {
+        require(routers[routerId].createdAt > 0, "BotFi#SwapEngine#validateRouter: UNKNOWN_ROUTER_ID");
+
+        require(routers[routerId].enabled, "BotFi#SwapEngine#validateRouter: ROUTER_NOT_ENABLED");
+
+        _;
+    }
+
     /**
      * @dev perform a swap
      * @param routerId the identifier of the router to use
@@ -120,6 +138,7 @@ contract SwapEngine is TransferHelper, ContractBase {
     ) 
         external 
         payable
+        validateRouter(routerId)
         nonReentrant()
         swapNotPaused()
     {   

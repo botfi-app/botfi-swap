@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity ^0.8.0;
 
-import "./Globals.sol";
+import "./Defs.sol";
 import "@openzeppelin/contracts/interfaces/IERC20.sol";
 
-contract TransferHelper is Globals {
+contract TransferHelper is Defs {
 
     /**
      * @dev safeTransfer eth or token 

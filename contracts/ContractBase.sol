@@ -8,11 +8,17 @@ import "./interfaces/@uniswap/v2/v2-periphery/interfaces/IWETH.sol";
 import "@openzeppelin/contracts/utils/Multicall.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "./interfaces/@uniswap/v2/v2-periphery/interfaces/IUniswapV2Router02.sol";
+import "./interfaces/@uniswap/v2/v2-core/interfaces/IUniswapV2Factory.sol";
+import "./interfaces/@uniswap/v3/v3-core/interfaces/IUniswapV3Factory.sol";
+import "./interfaces/@uniswap/v3/v3-periphery/interfaces/ISwapRouter.sol";
+import "./interfaces/@uniswap/v2/v2-core/interfaces/IUniswapV2Pair.sol";
 
-import "./base/Globals.sol";
+import "./base/Utils.sol";
+import "./base/Defs.sol";
 
 contract ContractBase is 
-    Globals, 
+    Defs, 
     Context, 
     Ownable, 
     Multicall, 

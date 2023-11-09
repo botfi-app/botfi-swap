@@ -1,14 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "../interfaces/@uniswap/v2/v2-periphery/interfaces/IUniswapV2Router02.sol";
-import "../interfaces/@uniswap/v2/v2-core/interfaces/IUniswapV2Factory.sol";
-import "../interfaces/@uniswap/v3/v3-core/interfaces/IUniswapV3Factory.sol";
-import "../interfaces/@uniswap/v3/v3-periphery/interfaces/ISwapRouter.sol";
-import "../interfaces/@uniswap/v2/v2-core/interfaces/IUniswapV2Pair.sol";
-
-
-contract Globals {
+contract Defs {
 
     // the protocol fee 
     uint PROTOCOL_FEE;
@@ -19,6 +12,9 @@ contract Globals {
     // native token 
     address NATIVE_TOKEN = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
 
+    // adapters 
+    bytes32 ADAPTER_UNI_V2 = bytes32("uni_v2");
+    bytes32 ADAPTER_UNI_V3 = bytes32("uni_v3");
 
     // id  =>  RouteParams 
     mapping (bytes32 => RouterParams) public routers;
