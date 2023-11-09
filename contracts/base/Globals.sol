@@ -18,12 +18,12 @@ contract Globals {
     // native token 
     address nativeToken = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
 
-    struct DexParams {
-        bytes32             dex;
-        IUniswapV2Router02  v2Router;
-        IUniswapV2Factory   v2Factory;
-        ISwapRouter         v3Router; 
-        IUniswapV3Factory   v3Factory;
+    struct RouterParams {
+        bytes32             id;
+        bytes32             adapter; //adapter name uni_v2, uni_v3 and 1inch, balancer
+        address             router;
+        address             factory;
+        address             weth;
         uint256             createdAt;
         bool                enabled; 
     }
