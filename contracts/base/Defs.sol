@@ -10,11 +10,11 @@ contract Defs {
     address FEE_WALLET;
 
     // native token 
-    address NATIVE_TOKEN = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
+    address constant NATIVE_TOKEN = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
 
     // adapters 
-    bytes32 ADAPTER_UNI_V2 = bytes32("uni_v2");
-    bytes32 ADAPTER_UNI_V3 = bytes32("uni_v3");
+    bytes32 constant ADAPTER_UNI_V2 = bytes32("uni_v2");
+    bytes32 constant ADAPTER_UNI_V3 = bytes32("uni_v3");
 
     // id  =>  RouteParams 
     mapping (bytes32 => RouterParams) public routers;

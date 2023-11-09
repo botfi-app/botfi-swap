@@ -4,6 +4,9 @@ const secrets = require("../.secrets")
 const Utils = require("../classes/Utils")
 const dappArgs = require("../dappArgs")
 const { utils: ethersUtils } = require("ethers")
+const fsp = require("fs/promises")
+const _lodash = require("lodash")
+
 
 module.exports = async ({getUnnamedAccounts, deployments, ethers, network}) => {
 
@@ -89,6 +92,37 @@ module.exports = async ({getUnnamedAccounts, deployments, ethers, network}) => {
         await factoryMcall.wait();
 
         Utils.successMsg("addDex multicall success: "+ factoryMcall.hash)
+
+        // export contract info to the provide paths
+        Utils.infoMsg("Exporting contract info")
+
+        let contractInfoExportPaths = secrets.contractInfoExportPaths || []
+
+        for(let configDirPath of contractInfoExportPaths){
+
+            //lets create the path 
+            await fsp.mkdir(configDirPath, {recursive: true})
+
+            let configFilePath = `${configDirPath}/${chainId}.json`;
+
+            // lets now fetch the data 
+            let contractInfoData = {}
+
+            try {
+                contractInfoData = require(configFilePath)
+            } catch(e){}
+
+            contractInfoData = _lodash.merge({},contractInfoData, deployedContractsAddresses)
+
+            Utils.infoMsg(`New Config For ${networkName} - ${JSON.stringify(contractInfoData, null, 2)}`)
+
+            Utils.successMsg(`Saving ${chainId} contract info to ${configFilePath}`)
+            console.log()
+
+            //lets save it back
+            await fsp.writeFile(configFilePath, JSON.stringify(contractInfoData, null, 2));
+       }
+
 
     }  catch(e) {
         console.log(e,e.stack)

@@ -123,6 +123,7 @@ contract SwapEngine is TransferHelper, ContractBase {
         _;
     }
 
+
     /**
      * @dev perform a swap
      * @param routerId the identifier of the router to use
@@ -164,6 +165,7 @@ contract SwapEngine is TransferHelper, ContractBase {
 
         address route = routers[routerId].route;
         uint256 swapAmt = amount - feeAmt;
+
 
         if(tokenA == NATIVE_TOKEN){
             route.functionCallWithValue(payload, swapAmt);
