@@ -55,7 +55,7 @@ module.exports = async ({getUnnamedAccounts, deployments, ethers, network}) => {
         let factoryIface = new ethers.utils.Interface(deployedFactory.abi);
 
 
-        let dexesInputs = []
+        let routersInputs = []
 
         for(let routerId of Object.keys(routers)){
             
@@ -81,12 +81,12 @@ module.exports = async ({getUnnamedAccounts, deployments, ethers, network}) => {
                             ]
                         );
 
-            dexesInputs.push(data)
+            routersInputs.push(data)
         }
 
         Utils.infoMsg("adding dexes with multicall")
         
-        let factoryMcall = await factoryContract.multicall(dexesInputs)
+        let factoryMcall = await factoryContract.multicall(routersInputs)
 
         //lets wait for tx to complete 
         await factoryMcall.wait();
@@ -96,8 +96,12 @@ module.exports = async ({getUnnamedAccounts, deployments, ethers, network}) => {
         // export contract addresses
         await exportContractAddresses({ chainId, deployedContractsAddresses })
 
+        let deployedContracts = {
+            factory: deployedFactory
+        }
+
         // export contract abis 
-        await exportContractABIs({ chainId, deployedContracts })
+        await exportContractABIs({ chainId, networkName, deployedContracts })
     }  catch(e) {
         console.log(e,e.stack)
     }
@@ -105,7 +109,11 @@ module.exports = async ({getUnnamedAccounts, deployments, ethers, network}) => {
 }
 
 
-const exportContractAddresses = async ({ chainId, deployedContractsAddresses}) => {
+const exportContractAddresses = async ({ 
+    chainId, 
+    networkName,
+    deployedContractsAddresses
+}) => {
 
     // export contract info to the provide paths
     Utils.infoMsg("Exporting contract addresses")
