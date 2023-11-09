@@ -45,8 +45,8 @@ contract SwapEngine is TransferHelper, ContractBase {
         uint createdAt = (isNew) ? block.timestamp : routers[id].createdAt;
 
         if(adapter == bytes32("uni_v2")){
-            factory = IUniswapV2Router02(route).factory();
-            weth    = IUniswapV2Router02(route).WETH();
+            //factory = IUniswapV2Router02(route).factory();
+            //weth    = IUniswapV2Router02(route).WETH();
         }
 
         routers[id] = RouterParams(
