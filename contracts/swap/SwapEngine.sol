@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-2.0-or-later
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "../ContractBase.sol";
@@ -16,7 +16,7 @@ contract SwapEngine is TransferHelper, ContractBase {
       function addRouter(
         bytes32             id,
         bytes32             adapter, // uni_v2, uni_v3, 1inch, ...                  
-        address             router, 
+        address  payable    router, 
         address             factory,
         address             weth,
         bool                enabled
@@ -48,13 +48,13 @@ contract SwapEngine is TransferHelper, ContractBase {
      * @dev perform a swap
      * @param routerId the identifier of the router to use
      * @param amount the total amount including the protocol fee for the swap
-     * @param tokenFrom the input token address 
+     * @param tokenA the token to swap into another token (tokenB)
      * @param data the encoded swap data to foward to the router
      */ 
     function swap(
         bytes32 routerId,
         uint256 amount, 
-        address tokenFrom, 
+        address tokenA, 
         bytes calldata data
     ) 
         public 
@@ -63,21 +63,25 @@ contract SwapEngine is TransferHelper, ContractBase {
 
         require(routers[routerId].createdAt > 0, "BotFi: UNSUPPORTED_DEX");
         require(data.length > 0, "BotFi: DATA_ARG_REQUIRED");
+        require(tokenA != address(0), "BotFi: ZERO_TOKENA_ADDR");
 
-        if(tokenFrom == nativeToken) {
+        if(tokenA == nativeToken) {
             //validate native token input
             require(msg.value == amount, "BotFi: INSUFFICIENT_BALANCE");
         } else {
             
             // lets transfer the tokens from the user
-            transferAsset(tokenFrom, _msgSender(), address(this), amount);
+            transferAsset(tokenA, _msgSender(), address(this), amount);
         }
 
         //get fee amt
         uint feeAmt = amount - calPercentage(amount, protocolFee);
 
         // lets perform fee transfer 
+        transferAsset(tokenA, _msgSender(), feeAddress, feeAmt);
 
+
+        
     }
     
 }   

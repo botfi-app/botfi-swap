@@ -1,9 +1,9 @@
-// SPDX-License-Identifier: GPL-2.0-or-later
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "../ContractBase.sol";
-import "../base/TransferHelper.sol";
-import "./SwapEngine.sol";
+import "../../ContractBase.sol";
+import "../../base/TransferHelper.sol";
+import "../SwapEngine.sol";
 
 contract v2Swap is SwapEngine {
 
@@ -13,7 +13,7 @@ contract v2Swap is SwapEngine {
      * @param dex the name of the dex in bytes32
      * @param amount the input amount
      * @param tokenFrom the input token address 
-     */ 
+     
     function swapV2(
         bytes32 dexId,
         uint256 amount, 
@@ -40,6 +40,6 @@ contract v2Swap is SwapEngine {
 
         //get fee amt
         uint feeAmt = amount - calPercentage(amount, protocolFee);
-    }
+    }*/
 
 }

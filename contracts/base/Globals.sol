@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-2.0-or-later
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "../interfaces/@uniswap/v2/v2-periphery/interfaces/IUniswapV2Router02.sol";
@@ -6,6 +6,7 @@ import "../interfaces/@uniswap/v2/v2-core/interfaces/IUniswapV2Factory.sol";
 import "../interfaces/@uniswap/v3/v3-core/interfaces/IUniswapV3Factory.sol";
 import "../interfaces/@uniswap/v3/v3-periphery/interfaces/ISwapRouter.sol";
 import "../interfaces/@uniswap/v2/v2-core/interfaces/IUniswapV2Pair.sol";
+import "@openzeppelin/contracts/utils/Address.sol";
 
 contract Globals {
 
@@ -21,7 +22,7 @@ contract Globals {
     struct RouterParams {
         bytes32             id;
         bytes32             adapter; //adapter name uni_v2, uni_v3 and 1inch, balancer
-        address             router;
+        address   payable   router;
         address             factory;
         address             weth;
         uint256             createdAt;

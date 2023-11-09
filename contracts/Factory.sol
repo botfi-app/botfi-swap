@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "./ContractBase.sol";
-import "./core/SwapEngine.sol";
+import "./swap/SwapEngine.sol";
 
 contract Factory is ContractBase, SwapEngine {
 
