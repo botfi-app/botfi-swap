@@ -1,19 +1,23 @@
+const path = require("path")
+
 module.exports = {
-    
+
     accounts: [
-        "0x...",
+        "xxxx",
     ],
 
-    noderealApiKey: "xx",
+    noderealApiKey: "xxx",
     
     etherscanAPIKey: "xxx",
     
 
     abiExportPaths: [
-       
+        path.resolve("../botfi-wallet/src/data/abi/botfi_swap"),
+        path.resolve("../botfi-backend/src/data/abi/botfi_swap")
     ],
 
-    contractInfoExportPaths: [
-       
+    contractAddressesExportPaths: [
+        path.resolve("../botfi-wallet/src/config/contracts/botfi_swap"),
+        path.resolve("../botfi-backend/src/config/contracts/botfi_swap")
     ]
 }
