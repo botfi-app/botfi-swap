@@ -3,6 +3,8 @@ pragma solidity ^0.8.0;
 
 import "../ContractBase.sol";
 import "../base/TransferHelper.sol";
+import "hardhat/console.sol";
+
 
 contract SwapEngine is TransferHelper, ContractBase {
 
@@ -27,6 +29,36 @@ contract SwapEngine is TransferHelper, ContractBase {
         _;
     }
 
+    /**
+     * @dev fecth uniswap v2 router info
+     * @param uniV2Router the router address
+     * @return factory the factory contract address
+     * @return weth the wrapped ether address
+     */
+    function getUniV2RouterInfo(address uniV2Router) 
+        public 
+        pure 
+        returns ( address factory, address weth) 
+    {
+
+        IUniswapV2Router02 irouter = IUniswapV2Router02(uniV2Router);
+
+        string memory revertErrMsg = "BotFi#SwapEngine#getUniV2RouterInfo: Failed to fetch uni_v2 factory and weth from router, kindly check if the router is valid";
+
+        try  irouter.factory() returns(address _f) {
+            factory = _f;
+        } catch {
+            revert(revertErrMsg);
+        }
+
+        try  irouter.WETH() returns(address _f) {
+            weth = _f;
+        } catch {
+            revert(revertErrMsg);
+        }
+    }
+
+
     function addRouter(
         bytes32             id,
         bytes32             adapter, // uni_v2, uni_v3, 1inch, ...                  
@@ -45,8 +77,7 @@ contract SwapEngine is TransferHelper, ContractBase {
         uint createdAt = (isNew) ? block.timestamp : routers[id].createdAt;
 
         if(adapter == bytes32("uni_v2")){
-            //factory = IUniswapV2Router02(route).factory();
-            //weth    = IUniswapV2Router02(route).WETH();
+            (factory, weth) = getUniV2RouterInfo(route);
         }
 
         routers[id] = RouterParams(
@@ -61,6 +92,7 @@ contract SwapEngine is TransferHelper, ContractBase {
 
         if(isNew) routersIds.push(id);
     }
+
 
     /**
      * @dev pause the swap operation for the contract

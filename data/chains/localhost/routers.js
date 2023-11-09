@@ -5,7 +5,7 @@ const _0x = Utils.zeroAddress;
 module.exports = {
 
     uniswap_v2: {
-        router: "0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45",
+        router: "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
         factory: _0x, // it will be auto fetched
         weth:    _0x, // it will be auto fetched
         adapter: "uni_v2"
