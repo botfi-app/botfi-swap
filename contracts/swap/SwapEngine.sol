@@ -19,13 +19,13 @@ contract SwapEngine is TransferHelper, ContractBase {
     using Address for address;
     using Address for address payable;
 
-    bool swapPaused;
+    bool private isPaused;
 
     receive() external payable{}
     fallback() external payable{}
 
-    modifier swapNotPaused() {
-        require(!swapPaused, "BotFi#swapNotPaused: SWAP_PAUSED");
+    modifier notPaused() {
+        require(!isPaused, "BotFi#swapNotPaused: SWAP_PAUSED");
         _;
     }
 
@@ -58,11 +58,19 @@ contract SwapEngine is TransferHelper, ContractBase {
         }
     }
 
-
-    function addRouter(
+    /**
+     * @dev addRouter add a router params
+     * @param id  router id
+     * @param group  router group - uni_v2, uni_v3 ....
+     * @param router  the router address 
+     * @param factory the factory address
+     * @param weth   wrapped ether or wrapped native token
+     * @param enabled  is the router enabled or not
+     */
+    function addRoute(
         bytes32             id,
-        bytes32             adapter, // uni_v2, uni_v3, 1inch, ...                  
-        address  payable    route, 
+        bytes32             group, // uni_v2, uni_v3, 1inch, ...                  
+        address  payable    router, 
         address             factory,
         address             weth,
         bool                enabled
@@ -71,37 +79,61 @@ contract SwapEngine is TransferHelper, ContractBase {
         onlyOwner 
     {
 
-        require(route != address(0), "BotFi#SwapEngine#addRouter: ZERO_ROUTER_ADDRESS");
+        require(router != address(0), "BotFi#SwapEngine#addRouter: ZERO_ROUTER_ADDRESS");
 
-        require(Utils.isContract(route), "BotFi#SwapEngine#addRouter: ROUTE_NOT_A_CONTRACT");
+        require(Utils.isContract(router), "BotFi#SwapEngine#addRouter: ROUTER_NOT_A_CONTRACT");
     
 
-        bool isNew = (routers[id].createdAt == 0);
-        uint createdAt = (isNew) ? block.timestamp : routers[id].createdAt;
+        bool isNew = (routes[id].createdAt == 0);
+        uint createdAt = (isNew) ? block.timestamp : routes[id].createdAt;
 
-        if(adapter == ADAPTER_UNI_V2){
-            (factory, weth) = getUniV2RouterInfo(route);
-        } else {
+        if(group == ROUTE_GROUP_UNI_V2){
+            (factory, weth) = getUniV2RouterInfo(router);
+        } 
+        else  if (group == ROUTE_GROUP_UNI_V3){
 
             require(Utils.isContract(factory), "BotFi#SwapEngine#addRouter: FACTORY_NOT_A_CONTRACT");
 
             require(Utils.isContract(weth), "BotFi#SwapEngine#addRouter: WETH_NOT_A_CONTRACT");
-
         }
 
-        routers[id] = RouterParams(
+        routes[id] = RouteParams(
             id,
-            adapter, 
-            route,
+            group, 
+            router,
             factory,
             weth,
             createdAt,
             enabled
         );
 
-        if(isNew) routersIds.push(id);
+        if(isNew) routesIds.push(id);
     }
 
+    /**
+     * @dev enable or disable a route
+     * @param id the router id
+     * @param opt true or false
+     */
+    function enableRoute(bytes32 id, bool opt)
+        external
+    {
+        require(routes[id].createdAt > 0, "BotFi:SwapEngine#enableRouter: INVALID_ROUTE");
+
+        routes[id].enabled = opt;
+    }
+
+    /**
+     * @dev getAllRoutes get all the routers
+     * returns array 
+     */
+    function getAllRoutes()
+        external
+        view 
+        returns (RouteParams[] memory)
+    {
+
+    }
 
     /**
      * @dev pause the swap operation for the contract
@@ -111,14 +143,14 @@ contract SwapEngine is TransferHelper, ContractBase {
         external
         onlyOwner 
     {
-        swapPaused = opt;
+        isPaused = opt;
     }
 
 
-    modifier validateRouter(bytes32 routerId) {
-        require(routers[routerId].createdAt > 0, "BotFi#SwapEngine#validateRouter: UNKNOWN_ROUTER_ID");
+    modifier validateRouter(bytes32 routeId) {
+        require(routes[routeId].createdAt > 0, "BotFi#SwapEngine#validateRouter: UNKNOWN_ROUTER_ID");
 
-        require(routers[routerId].enabled, "BotFi#SwapEngine#validateRouter: ROUTER_NOT_ENABLED");
+        require(routes[routeId].enabled, "BotFi#SwapEngine#validateRouter: ROUTER_NOT_ENABLED");
 
         _;
     }
@@ -126,25 +158,25 @@ contract SwapEngine is TransferHelper, ContractBase {
 
     /**
      * @dev perform a swap
-     * @param routerId the identifier of the router to use
+     * @param routeId the identifier of the router to use
      * @param amount the total amount including the protocol fee for the swap
      * @param tokenA the token to swap into another token (tokenB)
      * @param payload the encoded swap data to foward to the router
      */ 
     function swap(
-        bytes32 routerId,
+        bytes32 routeId,
         uint256 amount, 
         address tokenA, 
         bytes calldata payload
     ) 
         external 
         payable
-        validateRouter(routerId)
+        validateRouter(routeId)
         nonReentrant()
-        swapNotPaused()
+        notPaused()
     {   
 
-        require(routers[routerId].createdAt > 0, "BotFi#Swap: UNSUPPORTED_DEX");
+        require(routes[routeId].createdAt > 0, "BotFi#Swap: UNSUPPORTED_DEX");
         require(payload.length > 0, "BotFi#Swap: DATA_ARG_REQUIRED");
         require(tokenA != address(0), "BotFi#Swap: ZERO_TOKENA_ADDR");
 
@@ -163,20 +195,20 @@ contract SwapEngine is TransferHelper, ContractBase {
         // lets perform fee transfer 
         transferAsset(tokenA, _msgSender(), FEE_WALLET, feeAmt);
 
-        address route = routers[routerId].route;
+        address router = routes[routeId].router;
         uint256 swapAmt = amount - feeAmt;
 
 
         if(tokenA == NATIVE_TOKEN){
-            route.functionCallWithValue(payload, swapAmt);
+            router.functionCallWithValue(payload, swapAmt);
         } else {
 
-            require(IERC20(tokenA).approve(route, swapAmt), "BotFi#Swap: TOKENA_APPROVAL_FAILED");
+            require(IERC20(tokenA).approve(router, swapAmt), "BotFi#SwapEngine: TOKENA_APPROVAL_FAILED");
 
-            route.functionCallWithValue(payload, msg.value);
+            router.functionCallWithValue(payload, msg.value);
         }
 
-        emit Swap(routerId, amount, tokenA, PROTOCOL_FEE, _msgSender());
+        emit Swap(routeId, amount, tokenA, PROTOCOL_FEE, _msgSender());
     }
     
     /**

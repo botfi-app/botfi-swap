@@ -13,17 +13,17 @@ contract Defs {
     address constant NATIVE_TOKEN = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
 
     // adapters 
-    bytes32 constant ADAPTER_UNI_V2 = bytes32("uni_v2");
-    bytes32 constant ADAPTER_UNI_V3 = bytes32("uni_v3");
+    bytes32 constant ROUTE_GROUP_UNI_V2 = bytes32("uni_v2");
+    bytes32 constant ROUTE_GROUP_UNI_V3 = bytes32("uni_v3");
 
     // id  =>  RouteParams 
-    mapping (bytes32 => RouterParams) public routers;
-    bytes32[] public routersIds;
+    mapping (bytes32 => RouteParams) public routes;
+    bytes32[] public routesIds;
 
-    struct RouterParams {
+    struct RouteParams {
         bytes32             id;
-        bytes32             adapter; //adapter name uni_v2, uni_v3 and 1inch, balancer
-        address   payable   route;
+        bytes32             group; //adapter name uni_v2, uni_v3 and 1inch, balancer
+        address   payable   router;
         address             factory;
         address             weth;
         uint256             createdAt;
