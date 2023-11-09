@@ -18,7 +18,7 @@ module.exports = {
         adapter: "uni_v3"
     },
 
-    /*
+    
     pancakeswap_v2: {
 
         router: "0xEfF92A263d31888d860bD50809A8D171709b7b1c",
@@ -32,5 +32,5 @@ module.exports = {
         factory: "0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865",
         weth:    "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
         adapter: "uni_v3"
-    }*/
+    }
 }
