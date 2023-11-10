@@ -25,7 +25,7 @@ module.exports = async ({getUnnamedAccounts, deployments, ethers, network}) => {
         let signer = await ethers.getSigner(owner)
 
         Utils.successMsg(`owner: ${owner}`)
-        Utils.successMsg(`networkName: ${networkName}`)
+        Utils.successMsg(`networkName: ${networkName}`) 
         Utils.successMsg(`chainId: ${chainId}`)
 
         Utils.infoMsg("Deploying Factory Contract")
