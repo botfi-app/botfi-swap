@@ -2,6 +2,7 @@ const path = require("path")
 
 module.exports = {
 
+    // private keys must start with 0x
     accounts: [
         "xxxx",
     ],
