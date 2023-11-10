@@ -12,10 +12,10 @@ module.exports = {
     },
 
     uniswap_v3: {
-        router: "0xE592427A0AEce92De3Edee1F18E0157C05861564",
+        router:  "0xE592427A0AEce92De3Edee1F18E0157C05861564",
         factory: "0x1F98431c8aD98523631AE4a59f267346ea31F984",
         weth:    "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-        group: "univ3"
+        group:   "univ3"
     },
 
     
@@ -24,7 +24,7 @@ module.exports = {
         router: "0xEfF92A263d31888d860bD50809A8D171709b7b1c",
         factory: _0x, // it will be auto fetched
         weth:    _0x, // it will be auto fetched
-        group: "univ2"
+        group:   "univ2"
     },
 
     pancakeswap_v3: {

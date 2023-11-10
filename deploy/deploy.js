@@ -92,7 +92,7 @@ module.exports = async ({getUnnamedAccounts, deployments, ethers, network}) => {
         //lets wait for tx to complete 
         await factoryMcall.wait();
 
-        Utils.successMsg("addDex multicall success: "+ factoryMcall.hash)
+        Utils.successMsg("addRoute multicall success: "+ factoryMcall.hash)
         
         // export contract addresses
         await exportContractAddresses({ chainId, deployedContractsAddresses })
