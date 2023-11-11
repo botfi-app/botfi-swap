@@ -20,5 +20,11 @@ module.exports = {
     contractAddressesExportPaths: [
         path.resolve("../botfi-wallet/src/config/contracts/botfi_swap"),
         path.resolve("../botfi-backend/src/config/contracts/botfi_swap")
-    ]
+    ],
+
+        // after deployment we call these files to register the chain id as supported for the swap
+        swapSupportedChainsRegistry: [
+            path.resolve("../botfi-wallet/src/config/swap/supported_chains.json"),
+            path.resolve("../botfi-backend/src/config/swap/supported_chains.json")
+        ]
 }

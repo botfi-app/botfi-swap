@@ -6,6 +6,7 @@ const dappArgs = require("../dappArgs")
 const { utils: ethersUtils } = require("ethers")
 const fsp = require("fs/promises")
 const _lodash = require("lodash")
+const path = require("path")
 
 
 module.exports = async ({getUnnamedAccounts, deployments, ethers, network}) => {
@@ -103,6 +104,9 @@ module.exports = async ({getUnnamedAccounts, deployments, ethers, network}) => {
 
         // export contract abis 
         await exportContractABIs({ chainId, networkName, deployedContracts })
+
+        await addChainToSupportSwapRegistry({ chainId, networkName })
+        
     }  catch(e) {
         console.log(e,e.stack)
     }
@@ -175,4 +179,40 @@ const exportContractABIs = async ({
      
      }
 
+}
+
+const addChainToSupportSwapRegistry = async ({
+    chainId,
+    networkName
+}) => {
+
+    const swapSupportedChainsRegistry = secrets.swapSupportedChainsRegistry || []
+
+    for(let configPath of swapSupportedChainsRegistry) {
+        
+        let dirPath =  path.dirname(configPath)
+
+        Utils.successMsg(`Registering ${chainId} as supported chain for swap as ${configPath}`)
+
+        Utils.mkdir(dirPath)
+
+        // lets now fetch the data 
+        let configData = {}
+
+        try {
+            configData = require(cPath)
+        } catch(e){}
+
+        let newConfigToWrite = {
+            [chainId]: true
+        }
+
+        configData = _lodash.merge({},configData, newConfigToWrite)
+
+        Utils.successMsg(`Writing swapSupportedChainsRegistry data  to ${configPath}`)
+        console.log()
+
+        //lets save it back
+        await fsp.writeFile(configPath, JSON.stringify(configData, null, 2))
+    }
 }
