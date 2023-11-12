@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import "../ContractBase.sol";
 import "../base/TransferHelper.sol";
-import "hardhat/console.sol";
+//import "hardhat/console.sol";
 
 
 contract SwapEngine is TransferHelper, ContractBase {
@@ -30,35 +30,6 @@ contract SwapEngine is TransferHelper, ContractBase {
     }
 
     /**
-     * @dev fecth uniswap v2 router info
-     * @param uniV2Router the router address
-     * @return factory the factory contract address
-     * @return weth the wrapped ether address
-     */
-    function getUniV2RouterInfo(address uniV2Router) 
-        public 
-        pure 
-        returns ( address factory, address weth) 
-    {
-
-        IUniswapV2Router02 irouter = IUniswapV2Router02(uniV2Router);
-
-        string memory revertErrMsg = "BotFi#SwapEngine#getUniV2RouterInfo: Invalid Uniswap V2 Based Dex Router Address";
-
-        try  irouter.factory() returns(address _f) {
-            factory = _f;
-        } catch {
-            revert(revertErrMsg);
-        }
-
-        try  irouter.WETH() returns(address _f) {
-            weth = _f;
-        } catch {
-            revert(revertErrMsg);
-        }
-    }
-
-    /**
      * @dev addRouter add a router params
      * @param id  router id
      * @param group  router group - uni_v2, uni_v3 ....
@@ -82,20 +53,12 @@ contract SwapEngine is TransferHelper, ContractBase {
         require(router != address(0), "BotFi#SwapEngine#addRouter: ZERO_ROUTER_ADDRESS");
 
         require(Utils.isContract(router), "BotFi#SwapEngine#addRouter: ROUTER_NOT_A_CONTRACT");
-    
+        require(Utils.isContract(factory), "BotFi#SwapEngine#addRouter: FACTORY_NOT_A_CONTRACT");
+        require(Utils.isContract(weth), "BotFi#SwapEngine#addRouter: WETH_NOT_A_CONTRACT");
 
         bool isNew = (routes[id].createdAt == 0);
         uint createdAt = (isNew) ? block.timestamp : routes[id].createdAt;
 
-        if(group == ROUTE_GROUP_UNI_V2){
-            (factory, weth) = getUniV2RouterInfo(router);
-        } 
-        else  if (group == ROUTE_GROUP_UNI_V3){
-
-            require(Utils.isContract(factory), "BotFi#SwapEngine#addRouter: FACTORY_NOT_A_CONTRACT");
-
-            require(Utils.isContract(weth), "BotFi#SwapEngine#addRouter: WETH_NOT_A_CONTRACT");
-        }
 
         routes[id] = RouteParams(
             id,
@@ -220,7 +183,7 @@ contract SwapEngine is TransferHelper, ContractBase {
      * @param token the token address to withdraw
      * @param amount the amount to move out
      */
-    function withdraw(address token, uint256 amount) 
+    function sweep(address token, uint256 amount) 
         external 
         onlyOwner 
     {

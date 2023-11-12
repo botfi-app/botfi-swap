@@ -47,6 +47,12 @@ module.exports = {
       url:  `https://bsc-dataseed4.binance.org/`,
       chainId: 56,
       accounts
+    },
+
+    avax_mainnet: {
+      url:  `https://api.avax.network/ext/bc/C/rpc`,
+      chainId: 43114,
+      accounts
     }
 
   },
