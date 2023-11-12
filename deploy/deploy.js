@@ -106,7 +106,7 @@ module.exports = async ({getUnnamedAccounts, deployments, ethers, network}) => {
         await exportContractABIs({ chainId, networkName, deployedContracts })
 
         await addChainToSupportSwapRegistry({ chainId, networkName })
-        
+
     }  catch(e) {
         console.log(e,e.stack)
     }
@@ -194,7 +194,7 @@ const addChainToSupportSwapRegistry = async ({
 
         Utils.successMsg(`Registering ${chainId} as supported chain for swap as ${configPath}`)
 
-        Utils.mkdir(dirPath)
+        await Utils.mkdir(dirPath)
 
         // lets now fetch the data 
         let configData = {}
