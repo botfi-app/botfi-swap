@@ -43,8 +43,19 @@ module.exports = async ({getUnnamedAccounts, deployments, ethers, network}) => {
         deployedContractsAddresses["factory"] = deployedFactory.address;
 
    
-        //console.log("dexesInfo===>", dexesInfo)
+        Utils.infoMsg("Deploying Multicall3 Contract")
 
+        let deployedMuticall3 = await deploy('Multicall3', {
+            from: owner,
+            args: [],
+            log: true
+        });
+        
+        Utils.successMsg(`Multicall3 Deloyed: ${deployedMuticall3.address}`);
+
+        deployedContractsAddresses["multicall3"] = deployedMuticall3.address;
+
+        //initialize factory contract
         let factoryContract = new ethers.Contract(
                                 deployedFactory.address,
                                 deployedFactory.abi,
@@ -126,7 +137,7 @@ const exportContractAddresses = async ({
     let contractAddrsExportPaths = secrets.contractAddressesExportPaths || []
 
     for(let configDirPath of contractAddrsExportPaths){
-
+        
         //lets create the path 
         await fsp.mkdir(configDirPath, {recursive: true})
 
@@ -139,7 +150,13 @@ const exportContractAddresses = async ({
             contractInfoData = require(configFilePath)
         } catch(e){}
 
-        contractInfoData = _lodash.merge({},contractInfoData, deployedContractsAddresses)
+        let swapData =  contractInfoData["swap"] || {}
+
+        swapData =  _lodash.merge({}, swapData, deployedContractsAddresses)
+
+        contractInfoData["swap"] = swapData
+
+        //contractInfoData = _lodash.merge({}, , )
 
         Utils.infoMsg(`New Config For ${networkName} - ${JSON.stringify(contractInfoData, null, 2)}`)
 
@@ -172,10 +189,12 @@ const exportContractABIs = async ({
 
          let exportDir = `${exportPath}/`
          
-         await fsp.mkdir(exportDir, {recursive: true})
+         let swapExportDir = `${exportDir}/swap/`
+
+         await fsp.mkdir(swapExportDir, {recursive: true})
          
          Utils.successMsg(`Exporting factory.json to ${exportPath}/factory.json`);
-         await fsp.writeFile(`${exportDir}/factory.json`, JSON.stringify(factory.abi, null, 2));
+         await fsp.writeFile(`${swapExportDir}/factory.json`, JSON.stringify(factory.abi, null, 2));
      
      }
 

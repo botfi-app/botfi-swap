@@ -5,10 +5,10 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/interfaces/IERC20.sol";
 import "./interfaces/@uniswap/v2/v2-periphery/interfaces/IWETH.sol";
+import "@openzeppelin/contracts/utils/Multicall.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "./interfaces/@uniswap/v2/v2-periphery/interfaces/IUniswapV2Router02.sol";
-import "./multicall/Multicall3.sol";
 
 import "./base/Utils.sol";
 import "./base/Defs.sol";
@@ -17,7 +17,7 @@ contract ContractBase is
     Defs, 
     Context, 
     Ownable, 
-    Multicall3, 
+    Multicall, 
     ReentrancyGuard 
 {
 
