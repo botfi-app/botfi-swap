@@ -8,22 +8,6 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "target",
-        "type": "address"
-      }
-    ],
-    "name": "AddressEmptyCode",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "FailedInnerCall",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
         "name": "owner",
         "type": "address"
       }
@@ -122,6 +106,11 @@
         "internalType": "bytes[]",
         "name": "data",
         "type": "bytes[]"
+      },
+      {
+        "internalType": "bool",
+        "name": "revertOnError",
+        "type": "bool"
       }
     ],
     "name": "multicall",
@@ -132,7 +121,7 @@
         "type": "bytes[]"
       }
     ],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
     "type": "function"
   },
   {

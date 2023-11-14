@@ -275,6 +275,11 @@
         "internalType": "bytes[]",
         "name": "data",
         "type": "bytes[]"
+      },
+      {
+        "internalType": "bool",
+        "name": "revertOnError",
+        "type": "bool"
       }
     ],
     "name": "multicall",
@@ -285,7 +290,7 @@
         "type": "bytes[]"
       }
     ],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
     "type": "function"
   },
   {

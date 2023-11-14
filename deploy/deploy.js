@@ -42,7 +42,7 @@ module.exports = async ({getUnnamedAccounts, deployments, ethers, network}) => {
 
         deployedContractsAddresses["factory"] = deployedFactory.address;
 
-   
+        /*
         Utils.infoMsg("Deploying Multicall3 Contract")
 
         let deployedMuticall3 = await deploy('Multicall3', {
@@ -54,6 +54,7 @@ module.exports = async ({getUnnamedAccounts, deployments, ethers, network}) => {
         Utils.successMsg(`Multicall3 Deloyed: ${deployedMuticall3.address}`);
 
         deployedContractsAddresses["multicall3"] = deployedMuticall3.address;
+        */
 
         //initialize factory contract
         let factoryContract = new ethers.Contract(
@@ -99,7 +100,7 @@ module.exports = async ({getUnnamedAccounts, deployments, ethers, network}) => {
 
         Utils.infoMsg("adding routes with multicall")
         
-        let factoryMcall = await factoryContract.multicall(routesInputs)
+        let factoryMcall = await factoryContract.multicall(routesInputs, true)
 
         //lets wait for tx to complete 
         await factoryMcall.wait();
@@ -111,7 +112,7 @@ module.exports = async ({getUnnamedAccounts, deployments, ethers, network}) => {
 
         let deployedContracts = {
             factory: deployedFactory,
-            multicall3: deployedMuticall3
+            //multicall3: deployedMuticall3
         }
 
         // export contract abis 
@@ -198,9 +199,10 @@ const exportContractABIs = async ({
          Utils.successMsg(`Exporting factory.json to ${exportPath}/factory.json`);
          await fsp.writeFile(`${swapExportDir}/factory.json`, JSON.stringify(factory.abi, null, 2));
 
+         /*
          Utils.successMsg(`Exporting multicall3.json to ${exportPath}/multicall3.json`);
          await fsp.writeFile(`${swapExportDir}/multicall3.json`, JSON.stringify(multicall3.abi, null, 2));
-     
+        */
      }
 
 }
