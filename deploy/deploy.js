@@ -97,8 +97,6 @@ module.exports = async ({getUnnamedAccounts, deployments, ethers, network}) => {
                             ]
                         );
 
-            routesInputs.push(data)
-
             rMcallInputs.push({
                 target: deployedFactory.address,
                 data:   data
