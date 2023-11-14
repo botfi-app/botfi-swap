@@ -3,17 +3,28 @@ pragma solidity ^0.8.0;
 
 contract Multicall {
 
-    function multicall(bytes[] calldata data, bool revertOnError) 
+    struct Call {
+        address payable target;
+        bytes   data; 
+    }
+
+    struct Result {
+        bool   success;
+        bytes  data;
+    }
+
+    function multicall(Call[] calldata calls, bool revertOnError) 
         public 
         payable  
         returns 
-        (bytes[] memory results) 
+        (Result[] memory results) 
     {
 
-        results = new bytes[](data.length);
+        results = new Result[](calls.length);
 
-        for (uint256 i = 0; i < data.length; i++) {
-            (bool success, bytes memory result) = address(this).delegatecall(data[i]);
+        for (uint256 i = 0; i < calls.length; i++) {
+
+            (bool success, bytes memory result) = calls[i].target.delegatecall(calls[i].data);
 
             if (!success) {
                
@@ -29,7 +40,10 @@ contract Multicall {
                 }
             }
 
-            results[i] = result;
+            results[i] = Result (
+                success,
+                result
+            );
         }
     }
 }

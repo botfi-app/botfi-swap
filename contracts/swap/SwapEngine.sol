@@ -31,11 +31,12 @@ contract SwapEngine is TransferHelper, ContractBase {
 
     /**
      * @dev addRouter add a router params
-     * @param id  router id
-     * @param group  router group - uni_v2, uni_v3 ....
-     * @param router  the router address 
-     * @param factory the factory address
-     * @param weth   wrapped ether or wrapped native token
+     * @param id       router id
+     * @param group    router group - uni_v2, uni_v3 ....
+     * @param router   the router address 
+     * @param factory  the factory address
+     * @param weth     wrapped ether or wrapped native token
+     * @param quoter  swap quoter 
      * @param enabled  is the router enabled or not
      */
     function addRoute(
@@ -44,6 +45,7 @@ contract SwapEngine is TransferHelper, ContractBase {
         address  payable    router, 
         address             factory,
         address             weth,
+        address             quoter,
         bool                enabled
     ) 
         external 
@@ -56,6 +58,10 @@ contract SwapEngine is TransferHelper, ContractBase {
         require(Utils.isContract(factory), "BotFi#SwapEngine#addRouter: FACTORY_NOT_A_CONTRACT");
         require(Utils.isContract(weth), "BotFi#SwapEngine#addRouter: WETH_NOT_A_CONTRACT");
 
+        if(quoter != address(0)){
+            require(Utils.isContract(quoter), "BotFi#SwapEngine#addRouter: QUOTER_NOT_A_CONTRACT");
+        }
+
         bool isNew = (routes[id].createdAt == 0);
         uint createdAt = (isNew) ? block.timestamp : routes[id].createdAt;
 
@@ -66,6 +72,7 @@ contract SwapEngine is TransferHelper, ContractBase {
             router,
             factory,
             weth,
+            quoter,
             createdAt,
             enabled
         );
@@ -112,7 +119,6 @@ contract SwapEngine is TransferHelper, ContractBase {
     {
         isPaused = opt;
     }
-
 
     modifier validateRouter(bytes32 routeId) {
         require(routes[routeId].createdAt > 0, "BotFi#SwapEngine#validateRouter: UNKNOWN_ROUTER_ID");

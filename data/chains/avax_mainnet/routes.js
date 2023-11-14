@@ -17,6 +17,7 @@ module.exports = {
         router: "0xE3Ffc583dC176575eEA7FD9dF2A7c65F7E23f4C3",
         factory: "0x6E77932A92582f504FF6c4BdbCef7Da6c198aEEf", 
         weth:    "0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7", 
+        quoter:  "0xd76019A16606FDa4651f636D9751f500Ed776250",
         group:   "tjoe_v21"
     },
 
@@ -24,6 +25,7 @@ module.exports = {
         router: "0xE3Ffc583dC176575eEA7FD9dF2A7c65F7E23f4C3",
         factory: "0x6E77932A92582f504FF6c4BdbCef7Da6c198aEEf", 
         weth:    "0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7", 
+        quoter:  "0x9dbf1706577636941ab5f443d2aebe251ccd1648",
         group:   "tjoe_v20"
     },
 
@@ -31,6 +33,7 @@ module.exports = {
         router:  "0xbb00FF08d01D300023C629E8fFfFcb65A5a578cE",
         factory: "0x740b1c1de25031C31FF4fC9A62f554A55cdC1baD",
         weth:    "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7",
+        quoter:  "0xbe0F5544EC67e9B3b2D979aaA43f18Fd87E6257F",
         group:   "uni_v3"
     },
 

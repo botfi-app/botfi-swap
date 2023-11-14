@@ -68,12 +68,13 @@ module.exports = async ({getUnnamedAccounts, deployments, ethers, network}) => {
         // lets set up the dexes 
         let routes = require(`../data/chains/${networkName}/routes.js`)
         
-
-        let routesInputs = []
+        let rMcallInputs = []
 
         for(let routeId of Object.keys(routes)){
             
             let routeInfo = routes[routeId]
+
+            console.log("routeInfo===>", routeInfo)
 
             let routeIdByte32 = ethersUtils.formatBytes32String(
                                 routeId.trim().toLowerCase()
@@ -91,16 +92,22 @@ module.exports = async ({getUnnamedAccounts, deployments, ethers, network}) => {
                                 routeInfo.router,
                                 routeInfo.factory, 
                                 routeInfo.weth,
+                                routeInfo.quoter,
                                 true 
                             ]
                         );
 
             routesInputs.push(data)
+
+            rMcallInputs.push({
+                target: deployedFactory.address,
+                data:   data
+            })
         }
 
         Utils.infoMsg("adding routes with multicall")
         
-        let factoryMcall = await factoryContract.multicall(routesInputs, true)
+        let factoryMcall = await factoryContract.multicall(rMcallInputs, true)
 
         //lets wait for tx to complete 
         await factoryMcall.wait();

@@ -23,6 +23,7 @@ contract Defs {
         address   payable   router;
         address             factory;
         address             weth;
+        address             quoter;
         uint256             createdAt;
         bool                enabled; 
     }
