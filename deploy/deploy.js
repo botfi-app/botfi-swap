@@ -110,7 +110,8 @@ module.exports = async ({getUnnamedAccounts, deployments, ethers, network}) => {
         await exportContractAddresses({ chainId, deployedContractsAddresses })
 
         let deployedContracts = {
-            factory: deployedFactory
+            factory: deployedFactory,
+            multicall3: deployedMuticall3
         }
 
         // export contract abis 
@@ -175,7 +176,8 @@ const exportContractABIs = async ({
 }) => {
 
     let {
-        factory
+        factory,
+        multicall3
     } = deployedContracts
 
     Utils.successMsg(`Exporting abi files`);
@@ -195,6 +197,9 @@ const exportContractABIs = async ({
          
          Utils.successMsg(`Exporting factory.json to ${exportPath}/factory.json`);
          await fsp.writeFile(`${swapExportDir}/factory.json`, JSON.stringify(factory.abi, null, 2));
+
+         Utils.successMsg(`Exporting multicall3.json to ${exportPath}/multicall3.json`);
+         await fsp.writeFile(`${swapExportDir}/multicall3.json`, JSON.stringify(multicall3.abi, null, 2));
      
      }
 
@@ -219,14 +224,10 @@ const addChainToSupportSwapRegistry = async ({
         let configData = {}
 
         try {
-            configData = require(cPath)
+            configData = require(configPath)
         } catch(e){}
 
-        let newConfigToWrite = {
-            [chainId]: true
-        }
-
-        configData = _lodash.merge({},configData, newConfigToWrite)
+        configData[chainId] = true 
 
         Utils.successMsg(`Writing swapSupportedChainsRegistry data  to ${configPath}`)
         console.log()
