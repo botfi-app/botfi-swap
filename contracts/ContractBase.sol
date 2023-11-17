@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/utils/Address.sol";
 
 import "./base/Utils.sol";
 import "./base/Defs.sol";
-import "./base/Multicall.sol";
+import "@openzeppelin/contracts/utils/Multicall.sol";
 
 contract ContractBase is 
     Defs, 
