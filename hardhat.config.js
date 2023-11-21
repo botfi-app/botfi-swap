@@ -12,7 +12,8 @@ require('hardhat-abi-exporter',{ path: 'data/abi', clear: true });
 
 const {
   accounts,
-  noderealApiKey
+  noderealApiKey,
+  buildBearApiKey
 } = require("./.secrets")
 
 
@@ -52,6 +53,12 @@ module.exports = {
     avax_mainnet: {
       url:  `https://api.avax.network/ext/bc/C/rpc`,
       chainId: 43114,
+      accounts
+    },
+
+    buildbear_avax: {
+      url: `https://rpc.buildbear.io/${buildBearApiKey}`,
+      chainId: 12602,
       accounts
     }
 

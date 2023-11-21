@@ -11,6 +11,7 @@
     "deploy_bsc_mainnet": "npx hardhat deploy --network bsc_mainnet",
     "deploy_bsc_testnet": "npx hardhat deploy --network bsc_testnet --reset",
     "deploy_avax_mainnet": "npx hardhat deploy --network avax_mainnet",
+    "deploy_buildbear_avax": "npx hardhat deploy --network buildbear_avax --reset",
     "deploy_polygon_testnet": "npx hardhat deploy --network polygon_testnet --reset",
     "deploy_local": "npx hardhat clean && npx hardhat deploy --network localhost --reset",
     "run_node": "node ./cli/run_node.js",
