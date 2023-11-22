@@ -122,6 +122,8 @@ module.exports = async ({getUnnamedAccounts, deployments, ethers, network}) => {
 
         await addChainToSupportSwapRegistry({ chainId, networkName })
 
+        await saveMulticallData({ chainId, deployedMuticall3 })
+
     }  catch(e) {
         console.log(e,e.stack)
     }
@@ -180,7 +182,6 @@ const exportContractABIs = async ({
 
     let {
         factory,
-        multicall3
     } = deployedContracts
 
     Utils.successMsg(`Exporting abi files`);
@@ -201,10 +202,6 @@ const exportContractABIs = async ({
          Utils.successMsg(`Exporting factory.json to ${exportPath}/factory.json`);
          await fsp.writeFile(`${swapExportDir}/factory.json`, JSON.stringify(factory.abi, null, 2));
 
-         
-        Utils.successMsg(`Exporting multicall3.json to ${exportPath}/multicall3.json`);
-        await fsp.writeFile(`${swapExportDir}/multicall3.json`, JSON.stringify(multicall3.abi, null, 2));
-        
      }
 
 }
@@ -239,4 +236,40 @@ const addChainToSupportSwapRegistry = async ({
         //lets save it back
         await fsp.writeFile(configPath, JSON.stringify(configData, null, 2))
     }
+}
+ 
+
+const saveMulticallData = async ({ chainId, deployedMuticall3 }) => {
+
+    Utils.successMsg(`Exporting multicall addresses for chain ${chainId}`);
+
+    let multicallAddr = deployedMuticall3.address;
+    
+    // let export the abi
+    let abiExportsPathsArray = secrets.multicall3AddrExportPaths || []
+
+    for(let configPath of abiExportsPathsArray) {
+    
+        let dirPath =  path.dirname(configPath)
+
+        Utils.successMsg(`exporting multicall address for ${chainId} to ${configPath}`)
+
+        await Utils.mkdir(dirPath)
+
+        // lets now fetch the data 
+        let configData = {}
+
+        try {
+            configData = require(configPath)
+        } catch(e){}
+
+        configData[chainId] = multicallAddr 
+
+        Utils.successMsg(`Writing multicall data  to ${configPath}`)
+        console.log()
+
+        //lets save it back
+        await fsp.writeFile(configPath, JSON.stringify(configData, null, 2))
+    }
+    
 }
