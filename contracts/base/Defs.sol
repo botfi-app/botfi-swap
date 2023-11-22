@@ -9,6 +9,8 @@ contract Defs {
     // the fee address, for taking fees 
     address FEE_WALLET;
 
+    bytes32 UNI_V3 = bytes32("uni_v3");
+
     // native token 
     address constant NATIVE_TOKEN = 0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE;
 

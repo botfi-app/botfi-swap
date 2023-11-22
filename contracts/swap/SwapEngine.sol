@@ -4,9 +4,14 @@ pragma solidity ^0.8.0;
 import "../ContractBase.sol";
 import "../base/TransferHelper.sol";
 //import "hardhat/console.sol";
+import "../interfaces/@uniswap/v3/v3-periphery/interfaces/external/IWETH9.sol";
 
 
-contract SwapEngine is TransferHelper, ContractBase {
+contract SwapEngine is 
+    TransferHelper, 
+    ContractBase,
+    IWETH9
+{
 
     event Swap(
         bytes32 routerId, 
@@ -149,7 +154,9 @@ contract SwapEngine is TransferHelper, ContractBase {
         notPaused()
     {   
 
-        require(routes[routeId].createdAt > 0, "BotFi#Swap: UNSUPPORTED_DEX");
+        RouteParams route = routes[routeId];
+
+        require(route.createdAt > 0, "BotFi#Swap: UNSUPPORTED_DEX");
         require(payload.length > 0, "BotFi#Swap: DATA_ARG_REQUIRED");
         require(tokenA != address(0), "BotFi#Swap: ZERO_TOKENA_ADDR");
 
@@ -168,17 +175,23 @@ contract SwapEngine is TransferHelper, ContractBase {
         // lets perform fee transfer 
         transferAsset(tokenA, _msgSender(), FEE_WALLET, feeAmt);
 
-        address router = routes[routeId].router;
         uint256 swapAmt = amount - feeAmt;
 
+        if(tokenA == NATIVE_TOKEN && route.group == UNI_V3){
+            IWETH9(tokenA).deposit{value: swapAmt}();
+        }
 
-        if(tokenA == NATIVE_TOKEN){
-            router.functionCallWithValue(payload, swapAmt);
+        if(tokenA == NATIVE_TOKEN && route.group != UNI_V3){
+            route.router.functionCallWithValue(payload, swapAmt);
         } else {
 
-            require(IERC20(tokenA).approve(router, swapAmt), "BotFi#SwapEngine: TOKENA_APPROVAL_FAILED");
+            address tokenAddr = (tokenA == NATIVE_TOKEN) ? route.weth : tokenA;
 
-            router.functionCallWithValue(payload, msg.value);
+            require(IERC20(tokenAddr).approve(router, swapAmt), 
+                "BotFi#SwapEngine: TOKENA_APPROVAL_FAILED"
+            );
+
+            route.router.functionCallWithValue(payload, 0);
         }
 
         emit Swap(routeId, amount, tokenA, PROTOCOL_FEE, _msgSender());
