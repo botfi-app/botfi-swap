@@ -9,8 +9,7 @@ import "../interfaces/@uniswap/v3/v3-periphery/interfaces/external/IWETH9.sol";
 
 contract SwapEngine is 
     TransferHelper, 
-    ContractBase,
-    IWETH9
+    ContractBase
 {
 
     event Swap(
@@ -154,7 +153,7 @@ contract SwapEngine is
         notPaused()
     {   
 
-        RouteParams route = routes[routeId];
+        RouteParams memory route = routes[routeId];
 
         require(route.createdAt > 0, "BotFi#Swap: UNSUPPORTED_DEX");
         require(payload.length > 0, "BotFi#Swap: DATA_ARG_REQUIRED");
@@ -169,6 +168,8 @@ contract SwapEngine is
             transferAsset(tokenA, _msgSender(), address(this), amount);
         }
 
+        address swapRouter = route.router;
+
         //get fee amt
         uint feeAmt = amount - calPercentage(amount, PROTOCOL_FEE);
 
@@ -178,20 +179,20 @@ contract SwapEngine is
         uint256 swapAmt = amount - feeAmt;
 
         if(tokenA == NATIVE_TOKEN && route.group == UNI_V3){
-            IWETH9(tokenA).deposit{value: swapAmt}();
+            IWETH9(route.weth).deposit{value: swapAmt}();
         }
 
         if(tokenA == NATIVE_TOKEN && route.group != UNI_V3){
-            route.router.functionCallWithValue(payload, swapAmt);
+            swapRouter.functionCallWithValue(payload, swapAmt);
         } else {
 
             address tokenAddr = (tokenA == NATIVE_TOKEN) ? route.weth : tokenA;
 
-            require(IERC20(tokenAddr).approve(router, swapAmt), 
+            require(IERC20(tokenAddr).approve(swapRouter, swapAmt), 
                 "BotFi#SwapEngine: TOKENA_APPROVAL_FAILED"
             );
 
-            route.router.functionCallWithValue(payload, 0);
+            swapRouter.functionCall(payload);
         }
 
         emit Swap(routeId, amount, tokenA, PROTOCOL_FEE, _msgSender());

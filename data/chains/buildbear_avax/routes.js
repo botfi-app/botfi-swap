@@ -30,8 +30,8 @@ module.exports = {
     },
 
     uniswap_v3: {
-        router:  "0xbb00FF08d01D300023C629E8fFfFcb65A5a578cE",
         factory: "0x740b1c1de25031C31FF4fC9A62f554A55cdC1baD",
+        router:  "0xbb00FF08d01D300023C629E8fFfFcb65A5a578cE",
         weth:    "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7",
         quoter:  "0xbe0F5544EC67e9B3b2D979aaA43f18Fd87E6257F",
         group:   "uni_v3"
