@@ -37,4 +37,34 @@ module.exports = {
         group:   "uni_v3"
     },
 
+
+    // pangolin exchange ///
+    pangolin_v2: {
+        factory: "0xefa94DE7a4656D787667C749f7E1223D71E9FD88",
+        router:  "0xE54Ca86531e17Ef3616d22Ca28b0D458b6C89106",
+        weth:    "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7",
+        quoter:  _0x,
+        group:   "uni_v2"
+    },
+
+    // end pangolin exchange ///
+
+    // sushi 
+    sushi_v2: {
+        factory: "0xc35DADB65012eC5796536bD9864eD8773aBc74C4",
+        router:  "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506",
+        weth:    "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7",
+        quoter:  _0x,
+        group:   "uni_v2"
+    },
+
+    /*sushi_v3: {
+        factory: "0x3e603C14aF37EBdaD31709C4f848Fc6aD5BEc715",
+        router:  "0xbb00FF08d01D300023C629E8fFfFcb65A5a578cE",
+        weth:    "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7",
+        quoter:  "0xb1E835Dc2785b52265711e17fCCb0fd018226a6e",
+        group:   "uni_v3"
+    },*/
+    //end sushi
+
 }

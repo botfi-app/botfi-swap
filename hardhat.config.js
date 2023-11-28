@@ -44,8 +44,8 @@ module.exports = {
       accounts
     },   
     
-    bsc_mainnet: {
-      url:  `https://bsc-dataseed4.binance.org/`,
+    bnbchain_mainnet: {
+      url:  `https://bsc.publicnode.com`,
       chainId: 56,
       accounts
     },

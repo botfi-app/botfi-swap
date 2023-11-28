@@ -136,7 +136,7 @@ contract SwapEngine is
     /**
      * @dev perform a swap
      * @param routeId the identifier of the router to use
-     * @param amount the total amount including the protocol fee for the swap
+     * @param amount the total amount without the protocol fee for the swap
      * @param tokenA the token to swap into another token (tokenB)
      * @param payload the encoded swap data to foward to the router
      */ 
@@ -155,9 +155,9 @@ contract SwapEngine is
 
         RouteParams memory route = routes[routeId];
 
-        require(route.createdAt > 0, "BotFi#Swap: UNSUPPORTED_DEX");
-        require(payload.length > 0, "BotFi#Swap: DATA_ARG_REQUIRED");
-        require(tokenA != address(0), "BotFi#Swap: ZERO_TOKENA_ADDR");
+        require(route.createdAt > 0,  "BotFi#Swap:  UNSUPPORTED_DEX");
+        require(payload.length > 0,   "BotFi#Swap:  PAYLOAD_REQUIRED");
+        require(tokenA != address(0), "BotFi#Swap:  ZERO_TOKENA_ADDR");
 
         if(tokenA == NATIVE_TOKEN) {
             //validate native token input
@@ -170,32 +170,53 @@ contract SwapEngine is
 
         address swapRouter = route.router;
 
-        //get fee amt
-        uint feeAmt = amount - calPercentage(amount, PROTOCOL_FEE);
+        uint256 swapAmt;
+        uint  feeAmt;
 
-        // lets perform fee transfer 
-        transferAsset(tokenA, _msgSender(), FEE_WALLET, feeAmt);
+        // if protocol fee is set and greater then 0, lets now take the fee
+        if(PROTOCOL_FEE > 0) {
 
-        uint256 swapAmt = amount - feeAmt;
+            //get fee amt
+            feeAmt  = calPercentage(amount, PROTOCOL_FEE);
 
-        if(tokenA == NATIVE_TOKEN && route.group == UNI_V3){
-            IWETH9(route.weth).deposit{value: swapAmt}();
+            // now amt to swap
+            swapAmt = amount - feeAmt; 
+
+            // lets transfer the fee to our fee wallet
+            transferAsset(tokenA, _msgSender(), FEE_WALLET, feeAmt);
+
+        } else {
+            //set swap amt to the whole amt if  protocol fees is 0
+            swapAmt = amount;
         }
 
+        // if tokenA is native but not univ3 as in univ3, we need to 
+        // wrap all native tokens first
         if(tokenA == NATIVE_TOKEN && route.group != UNI_V3){
             swapRouter.functionCallWithValue(payload, swapAmt);
         } else {
 
-            address tokenAddr = (tokenA == NATIVE_TOKEN) ? route.weth : tokenA;
+            address tokenAddr; 
 
+            // wrap native token if its uni_v3 group
+            if(tokenA == NATIVE_TOKEN && route.group == UNI_V3){
+                IWETH9(route.weth).deposit{value: swapAmt}();
+                tokenAddr = route.weth;
+            } else {
+                tokenAddr = tokenA;
+            }
+
+            // lets approve token spend
             require(IERC20(tokenAddr).approve(swapRouter, swapAmt), 
-                "BotFi#SwapEngine: TOKENA_APPROVAL_FAILED"
+               "BotFi#SwapEngine: TOKENA_APPROVAL_FAILED"
             );
 
+            // forward the payload to the main swap
             swapRouter.functionCall(payload);
         }
 
         emit Swap(routeId, amount, tokenA, PROTOCOL_FEE, _msgSender());
+
     }
     
     /**
