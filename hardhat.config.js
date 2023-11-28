@@ -50,6 +50,12 @@ module.exports = {
       accounts
     },
 
+    bnbchain_fork: {
+      url:  `https://rpc.tenderly.co/fork/74914579-a14a-4054-ba3a-7cd616136ef7`,
+      chainId: 56,
+      accounts
+    },
+
     avax_mainnet: {
       url:  `https://api.avax.network/ext/bc/C/rpc`,
       chainId: 43114,

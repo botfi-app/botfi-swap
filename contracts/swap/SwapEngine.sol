@@ -180,7 +180,7 @@ contract SwapEngine is
             feeAmt  = calPercentage(amount, PROTOCOL_FEE);
 
             // now amt to swap
-            swapAmt = amount - feeAmt; 
+            swapAmt = amount - feeAmt;
 
             // lets transfer the fee to our fee wallet
             transferAsset(tokenA, _msgSender(), FEE_WALLET, feeAmt);
@@ -217,6 +217,32 @@ contract SwapEngine is
 
         emit Swap(routeId, amount, tokenA, PROTOCOL_FEE, _msgSender());
 
+    }
+
+    /**
+     * getSwapGasFee
+     */
+    function getSwapGasInfo (
+        bytes32 routeId,
+        uint256 amount, 
+        address tokenA, 
+        bytes calldata payload
+    ) 
+        external 
+        payable
+        returns ( uint256, uint256, uint256 )
+    {
+        
+        uint256 gasStart = gasleft();
+
+        //perform swap 
+        this.swap(routeId, amount, tokenA, payload);
+
+        uint256 gasUsed;
+        
+        unchecked { gasUsed = gasStart - gasleft(); } 
+
+        return (gasUsed, tx.gasprice, block.gaslimit); 
     }
     
     /**

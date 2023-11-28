@@ -9,6 +9,7 @@
     "deploy_rinkeby": "npx hardhat deploy --network rinkeby --reset",
     "deploy_eth_mainnet": "npx hardhat deploy --network eth_mainnet",
     "deploy_bnbchain_mainnet": "npx hardhat deploy --network bnbchain_mainnet",
+    "deploy_bnbchain_fork": "npx hardhat deploy --network bnbchain_fork --reset",
     "deploy_bsc_testnet": "npx hardhat deploy --network bsc_testnet --reset",
     "deploy_avax_mainnet": "npx hardhat deploy --network avax_mainnet --reset",
     "deploy_bb_avax": "npx hardhat deploy --network buildbear_avax --reset",
