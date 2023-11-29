@@ -30,6 +30,12 @@ contract Defs {
         bool                enabled; 
     }
 
+    struct SwapGasInfo {
+        uint256    gasUsed;
+        uint256    gasPrice; 
+        uint256    gasLimit; 
+    }
+
     /**
      * @dev convert percentage in basis point of a value 
      * @param amount the amount to be calculated on

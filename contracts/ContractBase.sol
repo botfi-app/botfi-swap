@@ -18,7 +18,6 @@ contract ContractBase is
     ReentrancyGuard 
 {
 
-
     event SetProtocolFee(uint256);
     event SetFeeWallet(address addr);
 

@@ -221,7 +221,7 @@ contract SwapEngine is
 
     /**
      * getSwapGasFee
-     */
+     *
     function getSwapGasInfo (
         bytes32 routeId,
         uint256 amount, 
@@ -230,7 +230,7 @@ contract SwapEngine is
     ) 
         external 
         payable
-        returns ( uint256, uint256, uint256 )
+        returns (SwapGasInfo memory)
     {
         
         uint256 gasStart = gasleft();
@@ -242,8 +242,26 @@ contract SwapEngine is
         
         unchecked { gasUsed = gasStart - gasleft(); } 
 
-        return (gasUsed, tx.gasprice, block.gaslimit); 
+        return SwapGasInfo(gasUsed, tx.gasprice, block.gaslimit); 
     }
+
+    function getSwapGasInfoBatch (
+        bytes32 routeId,
+        uint256 amount, 
+        address tokenA,
+        bytes[] calldata payloadArr
+    ) 
+        external 
+        payable
+        returns ( SwapGasInfo[] memory results)
+    {
+        results = new SwapGasInfo[](payloadArr.length);
+
+        for(uint i = 0; i < payloadArr.length; i++){
+            results[i] = this.getSwapGasInfo(routeId, amount, tokenA, payloadArr[i]);
+        }
+    }
+    */
     
     /**
      * @dev withdraw any stucked tokens in the contract
