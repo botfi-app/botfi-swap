@@ -69,5 +69,22 @@ module.exports = {
     }
 
   },
+
+  etherscan: { // npx hardhat --network buildbear_avax  verify 0x4Bf3208528D51c1323dbE243cDD0b69f0a9bc5eD
+    apiKey: {
+      buildbear: "verifyContract",
+    },
+    customChains: [
+      {
+        network: "buildbear",
+        chainId: 12602,
+        urls: {
+          apiURL: "https://rpc.buildbear.io/verify/etherscan/accepted-tarfful-669a5ec0",
+          browserURL: "https://explorer.buildbear.io/accepted-tarfful-669a5ec0",
+        },
+      },
+    ],
+  },
+
   solidity: "0.8.20",
 };

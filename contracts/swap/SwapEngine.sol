@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.2;
 
 import "../ContractBase.sol";
 import "../base/TransferHelper.sol";
@@ -170,8 +170,7 @@ contract SwapEngine is
 
         address swapRouter = route.router;
 
-        uint256 swapAmt;
-        uint  feeAmt;
+        uint256 feeAmt;
 
         // if protocol fee is set and greater then 0, lets now take the fee
         if(PROTOCOL_FEE > 0) {
@@ -179,16 +178,12 @@ contract SwapEngine is
             //get fee amt
             feeAmt  = calPercentage(amount, PROTOCOL_FEE);
 
-            // now amt to swap
-            swapAmt = amount - feeAmt;
-
             // lets transfer the fee to our fee wallet
             transferAsset(tokenA, _msgSender(), FEE_WALLET, feeAmt);
 
-        } else {
-            //set swap amt to the whole amt if  protocol fees is 0
-            swapAmt = amount;
         }
+
+         uint256 swapAmt = amount - feeAmt;
 
         // if tokenA is native but not univ3 as in univ3, we need to 
         // wrap all native tokens first
@@ -218,50 +213,6 @@ contract SwapEngine is
         emit Swap(routeId, amount, tokenA, PROTOCOL_FEE, _msgSender());
 
     }
-
-    /**
-     * getSwapGasFee
-     *
-    function getSwapGasInfo (
-        bytes32 routeId,
-        uint256 amount, 
-        address tokenA, 
-        bytes calldata payload
-    ) 
-        external 
-        payable
-        returns (SwapGasInfo memory)
-    {
-        
-        uint256 gasStart = gasleft();
-
-        //perform swap 
-        this.swap(routeId, amount, tokenA, payload);
-
-        uint256 gasUsed;
-        
-        unchecked { gasUsed = gasStart - gasleft(); } 
-
-        return SwapGasInfo(gasUsed, tx.gasprice, block.gaslimit); 
-    }
-
-    function getSwapGasInfoBatch (
-        bytes32 routeId,
-        uint256 amount, 
-        address tokenA,
-        bytes[] calldata payloadArr
-    ) 
-        external 
-        payable
-        returns ( SwapGasInfo[] memory results)
-    {
-        results = new SwapGasInfo[](payloadArr.length);
-
-        for(uint i = 0; i < payloadArr.length; i++){
-            results[i] = this.getSwapGasInfo(routeId, amount, tokenA, payloadArr[i]);
-        }
-    }
-    */
     
     /**
      * @dev withdraw any stucked tokens in the contract
