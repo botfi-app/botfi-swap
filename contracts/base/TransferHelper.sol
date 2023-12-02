@@ -33,11 +33,19 @@ contract TransferHelper is Defs {
         address to,
         uint256 value
     ) internal {
-        require(IERC20(token).transferFrom(from, to, value), 'BotFi#TransferHelper: TOKEN_TRANSFER_FAILED');
+        if(from == address(this)){
+            require(IERC20(token).transfer(to, value), 
+                "BotFi#TransferHelper: ERC20_TOKEN_TRANSFER_FAILED"
+            );
+        } else {
+            require(IERC20(token).transferFrom(from, to, value), 
+                'BotFi#TransferHelper: ERC20_TOKEN_TRANSFER_FAILED'
+            );
+        }
     }
 
     function safeTransferETH(address to, uint256 value) internal {
         (bool success, ) = to.call{value: value}(new bytes(0));
-        require(success, 'BotFi#TransferHelper: ETH_TRANSFER_FAILED');
+        require(success, 'BotFi#TransferHelper: NATIVE_TOKEN_TRANSFER_FAILED');
     }
 }

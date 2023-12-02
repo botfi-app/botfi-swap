@@ -181,8 +181,7 @@ contract SwapEngine is
             feeAmt  = calPercentage(amount, PROTOCOL_FEE);
 
             // lets transfer the fee to our fee wallet
-            transferAsset(tokenA, _msgSender(), FEE_WALLET, feeAmt);
-
+            transferAsset(tokenA, address(this), FEE_WALLET, feeAmt);
         }
 
          uint256 swapAmt = amount - feeAmt;
