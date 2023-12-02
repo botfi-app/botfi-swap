@@ -164,6 +164,8 @@ contract SwapEngine is
             require(msg.value == amount, "BotFi#Swap: INSUFFICIENT_BALANCE");
         } else {
             
+            require(IERC20(tokenA).balanceOf(_msgSender()) >= amount, "BotFi#Swap: INSUFFICIENT_BALANCE");
+
             // lets transfer the tokens from the user
             transferAsset(tokenA, _msgSender(), address(this), amount);
         }
