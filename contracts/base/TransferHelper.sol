@@ -33,9 +33,7 @@ contract TransferHelper is Defs {
         address to,
         uint256 value
     ) internal {
-        (bool success, bytes memory data) =
-            token.call(abi.encodeWithSelector(IERC20.transferFrom.selector, from, to, value));
-        require(success && (data.length == 0 || abi.decode(data, (bool))), 'BotFi#TransferHelper: TOKEN_TRANSFER_FAILED');
+        require(IERC20(token).transferFrom(from, to, value), 'BotFi#TransferHelper: TOKEN_TRANSFER_FAILED');
     }
 
     function safeTransferETH(address to, uint256 value) internal {
