@@ -44,7 +44,7 @@ module.exports = {
         router:  "0xE54Ca86531e17Ef3616d22Ca28b0D458b6C89106",
         weth:    "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7",
         quoter:  _0x,
-        group:   "uni_v2"
+        group:   "png_v20"
     },
 
     // end pangolin exchange ///
@@ -56,15 +56,7 @@ module.exports = {
         weth:    "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7",
         quoter:  _0x,
         group:   "uni_v2"
-    },
-
-    /*sushi_v3: {
-        factory: "0x3e603C14aF37EBdaD31709C4f848Fc6aD5BEc715",
-        router:  "0xbb00FF08d01D300023C629E8fFfFcb65A5a578cE",
-        weth:    "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7",
-        quoter:  "0xb1E835Dc2785b52265711e17fCCb0fd018226a6e",
-        group:   "uni_v3"
-    },*/
+    }
     //end sushi
 
 }
