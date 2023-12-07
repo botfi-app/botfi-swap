@@ -48,7 +48,38 @@ module.exports = {
         weth:    "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
         quoter:  _0x,
         group:   "uni_v2"
-    }
+    },
     
     ///End Biswap ///
+
+    // start sushi swap 
+    sushi_v2: {
+        factory: "0xc35DADB65012eC5796536bD9864eD8773aBc74C4",
+        router:  "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506",
+        weth:    "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+        quoter:  _0x,
+        group:   "uni_v2"
+    },
+
+    // end sushi 
+    
+    // babyswap 
+    babyswap_v2: {
+        factory: "0x325e343f1de602396e256b67efd1f61c3a6b38bd",
+        router:  "0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506",
+        weth:    "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+        quoter:  _0x,
+        group:   "uni_v2"
+    },
+    // end baby swap
+
+    // mdex v2 
+    mdex_v2: {
+        factory: "0x3CD1C46068dAEa5Ebb0d3f55F6915B10648062B8",
+        router:  "0x7DAe51BD3E3376B8c7c4900E9107f12Be3AF1bA8",
+        weth:    "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+        quoter:  _0x,
+        group:   "uni_v2"
+    }
+    // end mdex v2
 }
