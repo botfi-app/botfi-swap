@@ -4,5 +4,5 @@ module.exports = {
     protocolFeeBasisPoint: 80, //0.8% = 80, 0.1 = 10bps as its divided by 10_000
     
     // the protocol fee wallet only for dev
-    feeWallet: "0x45C7D5104D69C8FD6e3a6fFdf3Baf61eB6B8dAAf" 
+    feeWallet: "0xAD10bF3C156c14816cDb48F505786cc8A0533F85" 
 } 

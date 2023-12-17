@@ -32,6 +32,12 @@ module.exports = {
       chainId: 1337
     },
 
+    eth_mainnet: {
+      url: `https://ethereum.publicnode.com`,
+      chainId: 1,
+      accounts
+    },   
+
     goerli: {
       url: `https://ethereum-goerli.publicnode.com`,
       chainId: 5,
@@ -66,7 +72,50 @@ module.exports = {
       url: `https://rpc.buildbear.io/${buildBearApiKey}`,
       chainId: 12602,
       accounts
-    }
+    },
+
+    polygon_mainnet: {
+      url: `https://polygon-bor.publicnode.com`,
+      chainId: 137,
+      accounts
+    },
+
+
+    arb_one_mainnet: {
+      url: `https://arbitrum-one.publicnode.com`,
+      chainId: 42161,
+      accounts
+    },
+
+    op_mainnet: {
+      url: `https://optimism.publicnode.com`,
+      chainId: 10,
+      accounts
+    },
+
+    base_mainnet: {
+      url: `https://base.publicnode.com`,
+      chainId: 8453,
+      accounts
+    },
+
+    gnosis_mainnet: {
+      url: `https://gnosis.publicnode.com`,
+      chainId: 100,
+      accounts
+    },
+
+    zksync_era: {
+      url: `https://mainnet.era.zksync.io`,
+      chainId: 324,
+      accounts
+    },
+
+    linea_mainnet: {
+      url: `https://rpc.linea.build`,
+      chainId: 59144,
+      accounts
+    },
 
   },
 

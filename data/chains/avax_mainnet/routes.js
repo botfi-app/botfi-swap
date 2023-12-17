@@ -12,7 +12,7 @@ const _0x = Utils.zeroAddress;
  */
 
 module.exports = {
-    /*
+
     traderjoe_v2_1: {
         factory: "0x8e42f2F4101563bF679975178e880FD87d3eFd4e", 
         router: "0xb4315e873dBcf96Ffd0acd8EA43f689D8c20fB30",
@@ -28,7 +28,7 @@ module.exports = {
         quoter:  "0x9dbf1706577636941ab5f443d2aebe251ccd1648",
         group:   "tjoe_v20"
     },
-    */
+
     uniswap_v3: {
         factory: "0x740b1c1de25031C31FF4fC9A62f554A55cdC1baD",
         router:  "0xbb00FF08d01D300023C629E8fFfFcb65A5a578cE",
@@ -38,13 +38,13 @@ module.exports = {
     },
 
 
-    /*/ pangolin exchange ///
+    // pangolin exchange ///
     pangolin_v2: {
         factory: "0xefa94DE7a4656D787667C749f7E1223D71E9FD88",
         router:  "0xE54Ca86531e17Ef3616d22Ca28b0D458b6C89106",
         weth:    "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7",
         quoter:  _0x,
-        group:   "uni_v2"
+        group:   "png_v20"
     },
 
     // end pangolin exchange ///
@@ -56,9 +56,7 @@ module.exports = {
         weth:    "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7",
         quoter:  _0x,
         group:   "uni_v2"
-    },
-    */
- 
+    }
     //end sushi
 
 }

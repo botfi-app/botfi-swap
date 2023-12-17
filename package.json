@@ -7,6 +7,8 @@
     "deploy_kovan": "npx hardhat deploy --network kovan --reset",
     "deploy_ropsten": "npx hardhat deploy --network ropsten --reset",
     "deploy_rinkeby": "npx hardhat deploy --network rinkeby --reset",
+    "deploy_arb_one_mainnet": "npx hardhat deploy --network arb_one_mainnet",
+    "deploy_op_mainnet": "npx hardhat deploy --network op_mainne",
     "deploy_eth_mainnet": "npx hardhat deploy --network eth_mainnet",
     "deploy_bnbchain_mainnet": "npx hardhat deploy --network bnbchain_mainnet",
     "deploy_bnbchain_fork": "npx hardhat deploy --network bnbchain_fork --reset",

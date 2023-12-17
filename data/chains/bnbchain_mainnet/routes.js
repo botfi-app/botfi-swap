@@ -80,6 +80,23 @@ module.exports = {
         weth:    "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
         quoter:  _0x,
         group:   "uni_v2"
-    }
+    },
     // end mdex v2
+
+    traderjoe_v2_1: {
+        factory: "0x8e42f2F4101563bF679975178e880FD87d3eFd4e", 
+        router:  "0xb4315e873dBcf96Ffd0acd8EA43f689D8c20fB30",
+        weth:    "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", 
+        quoter:  "0xd76019A16606FDa4651f636D9751f500Ed776250",
+        group:   "tjoe_v21"
+    },
+
+    traderjoe_v2_0: {
+        factory: "0x43646A8e839B2f2766392C1BF8f60F6e587B6960", 
+        router:  "0xb66A2704a0dabC1660941628BE987B4418f7a9E8",
+        weth:    "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7", 
+        quoter:  "0x89c71F2065aA505956a86FCadAE4a625A5b5e842",
+        group:   "tjoe_v20"
+    },
+
 }
