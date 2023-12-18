@@ -46,4 +46,11 @@ module.exports = {
         group:   "uni_v2"
     },
  
+    horizon_dex_v3: {
+        factory: "0x9Fe607e5dCd0Ea318dBB4D8a7B04fa553d6cB2c5",
+        router:  "0x272E156Df8DA513C69cB41cC7A99185D53F926Bb",
+        weth:    "0xe5D7C2a44FfDDf6b295A15c148167daaAf5Cf34f",
+        quoter:  "0x07AceD5690e09935b1c0e6E88B772d9440F64718",
+        group:   "uni_v3"
+    },
 }

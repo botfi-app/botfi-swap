@@ -31,7 +31,7 @@ module.exports = {
         group:   "uni_v3"
     },
 
-    // Start Pancakeswap //
+    /*/ Start Pancakeswap //
     pancakeswap_v2: {
         factory: "0x1097053Fd2ea711dad45caCcc45EfF7548fCB362",
         router:  "0xEfF92A263d31888d860bD50809A8D171709b7b1c",
@@ -66,5 +66,5 @@ module.exports = {
         quoter:  "0x4d6Dbd1b52807C71b9a148E222b167247a7cA789",
         group:   "tjoe_v21"
     },
-
+    */
 }
