@@ -81,25 +81,25 @@ module.exports = {
     },
 
 
-    arb_one_mainnet: {
+    arb_one: {
       url: `https://arbitrum-one.publicnode.com`,
       chainId: 42161,
       accounts
     },
 
-    op_mainnet: {
+    op: {
       url: `https://optimism.publicnode.com`,
       chainId: 10,
       accounts
     },
 
-    base_mainnet: {
+    base: {
       url: `https://base.publicnode.com`,
       chainId: 8453,
       accounts
     },
 
-    gnosis_mainnet: {
+    gnosis: {
       url: `https://gnosis.publicnode.com`,
       chainId: 100,
       accounts
@@ -111,7 +111,7 @@ module.exports = {
       accounts
     },
 
-    linea_mainnet: {
+    linea: {
       url: `https://rpc.linea.build`,
       chainId: 59144,
       accounts
